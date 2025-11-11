@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BikeMate WebApp</title>
+    <link rel="stylesheet" href="style.css"> 
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <h1>🚴 BikeMate: Gestión de Mantenimiento</h1>
+    </header>
+
+    <main>
+        <section id="maintenance-form">
+            <h2>🔧 Registrar Reemplazo (Transacción Atómica)</h2>
+            <p>Guarda el registro de servicio *y* resetea el KM del componente en un solo paso.</p>
+            <label for="bike-id-input">ID de Bicicleta:</label>
+            <input type="text" id="bike-id-input" value="bike_prueba_123">
+
+            <label for="component-id-input">ID de Componente:</label>
+            <input type="text" id="component-id-input" value="comp_cadena_456">
+
+            <label for="km-at-service-input">KM de la Bici en el Servicio:</label>
+            <input type="number" id="km-at-service-input" value="1050">
+            
+            <button style="background-color: #007AFF;" onclick="handleReplacement()">Registrar Reemplazo y Resetear</button>
+        </section>
+
+        <section id="km-update-form">
+            <h2>🛰️ Actualizar Kilometraje (Lote Eficiente)</h2>
+            <p>Actualiza el KM total *y* recalcula el uso de todos los componentes de la bici a la vez.</p>
+            <label for="update-bike-id">ID de Bicicleta:</label>
+            <input type="text" id="update-bike-id" value="bike_prueba_123">
+            
+            <label for="new-km-input">Nuevo KM Total (Ej: 1800):</label>
+            <input type="number" id="new-km-input" value="1800">
+            
+            <button style="background-color: #4CAF50;" onclick="handleKmUpdate()">Actualizar KM y Recalcular</button>
+        </section>
+
+        <section id="status-log">
+            <h2>📜 Log de Estado</h2>
+            <div id="log-output">Esperando acciones...</div>
+        </section>
+    </main>
+
+    <script src="app.js"></script> 
+</body>
+</html>
