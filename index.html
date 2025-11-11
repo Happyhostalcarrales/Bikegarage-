@@ -3,51 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BikeMate WebApp</title>
+    <title>BikeMate V3: Control Profesional</title>
     <link rel="stylesheet" href="style.css"> 
     
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-</head>
-<body>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script> </head>
+<body onload="initApp()">
     <header>
-        <h1>🚴 BikeMate: Gestión de Mantenimiento</h1>
+        <h1>🚴 BikeMate V3: Control Total de Mantenimiento</h1>
+        <button id="logout-button" style="display:none;" onclick="handleLogout()">Cerrar Sesión</button>
     </header>
 
     <main>
-        <section id="maintenance-form">
-            <h2>🔧 Registrar Reemplazo (Transacción Atómica)</h2>
-            <p>Guarda el registro de servicio *y* resetea el KM del componente en un solo paso.</p>
-            <label for="bike-id-input">ID de Bicicleta:</label>
-            <input type="text" id="bike-id-input" value="bike_prueba_123">
-
-            <label for="component-id-input">ID de Componente:</label>
-            <input type="text" id="component-id-input" value="comp_cadena_456">
-
-            <label for="km-at-service-input">KM de la Bici en el Servicio:</label>
-            <input type="number" id="km-at-service-input" value="1050">
+        <div id="auth-view" class="auth-container">
+            <h2>Acceso a BikeMate</h2>
+            <label for="auth-email">Email:</label>
+            <input type="email" id="auth-email" placeholder="email@ejemplo.com">
+            <label for="auth-password">Contraseña:</label>
+            <input type="password" id="auth-password" placeholder="Mínimo 6 caracteres">
             
-            <button style="background-color: #007AFF;" onclick="handleReplacement()">Registrar Reemplazo y Resetear</button>
-        </section>
-
-        <section id="km-update-form">
-            <h2>🛰️ Actualizar Kilometraje (Lote Eficiente)</h2>
-            <p>Actualiza el KM total *y* recalcula el uso de todos los componentes de la bici a la vez.</p>
-            <label for="update-bike-id">ID de Bicicleta:</label>
-            <input type="text" id="update-bike-id" value="bike_prueba_123">
+            <button style="background-color: #007AFF; margin-bottom: 5px;" onclick="handleSignUp()">Registrarse</button>
+            <button style="background-color: #4CAF50;" onclick="handleLogin()">Iniciar Sesión</button>
             
-            <label for="new-km-input">Nuevo KM Total (Ej: 1800):</label>
-            <input type="number" id="new-km-input" value="1800">
-            
-            <button style="background-color: #4CAF50;" onclick="handleKmUpdate()">Actualizar KM y Recalcular</button>
-        </section>
+            <p id="auth-message" style="color: var(--error-color); margin-top: 15px;"></p>
+        </div>
 
-        <section id="status-log">
-            <h2>📜 Log de Estado</h2>
-            <div id="log-output">Esperando acciones...</div>
-        </section>
+        <div id="app-content" style="display:none;">
+            <nav class="tabs-container">
+                <button class="tab-button active" onclick="showSection('dashboard')">🏠 Garaje y Estado</button>
+                <button class="tab-button" onclick="showSection('maintenance')">🔧 Mantenimiento/Reemplazo</button>
+                <button class="tab-button" onclick="showSection('inventory')">📦 Inventario y Stock</button>
+                <button class="tab-button" onclick="showSection('logs')">📜 Log de Eventos</button>
+            </nav>
+
+            <div id="dashboard" class="tab-content active">
+                <section id="bike-management">
+                    <h2>Estado de Uso y Desgaste</h2>
+                    <p class="description">Visualiza el desgaste de componentes y el Costo por KM.</p>
+                    <div id="bike-list">Cargando bicicletas...</div>
+                    
+                    <details class="new-item-details">
+                        <summary>➕ Añadir Nueva Bicicleta</summary>
+                        <div class="form-group">
+                            <label for="new-bike-id">ID Único (Ej: gravel_azul):</label>
+                            <input type="text" id="new-bike-id" placeholder="ID de la bicicleta">
+                            <label for="new-bike-name">Nombre:</label>
+                            <input type="text" id="new-bike-name" placeholder="Ej: Bici de Montaña">
+                            <label for="new-bike-km">KM Inicial:</label>
+                            <input type="number" id="new-bike-km" value="0">
+                            <button onclick="addBike()" style="background-color: #4CAF50;">Guardar Bicicleta</button>
+                        </div>
+                    </details>
+                </section>
+
+                <section id="km-update-form">
+                    <h3>Actualización de Kilometraje (Lote)</h3>
+                    <p class="description">Introduce el KM más reciente. Esto recalcula automáticamente todos los componentes.</p>
+                    <label for="update-bike-id">ID de Bicicleta:</label>
+                    <input type="text" id="update-bike-id" value="bike_prueba_123">
+                    
+                    <label for="new-km-input">Nuevo KM Total:</label>
+                    <input type="number" id="new-km-input" value="1800">
+                    
+                    <button style="background-color: #4CAF50;" onclick="handleKmUpdate()">Actualizar KM y Recalcular</button>
+                </section>
+            </div>
+
+            <div id="maintenance" class="tab-content">
+                <section id="maintenance-form">
+                    <h2>Registro de Reemplazo (Transacción Atómica)</h2>
+                    <p class="description">Registra un cambio de componente, guarda el costo y resetea el contador de KM.</p>
+                    
+                    <label for="maint-bike-id">ID de Bicicleta:</label>
+                    <input type="text" id="maint-bike-id" value="bike_prueba_123">
+
+                    <label for="maint-comp-id">ID de Componente a Reemplazar:</label>
+                    <input type="text" id="maint-comp-id" value="comp_cadena_456">
+
+                    <label for="maint-date">Fecha de Servicio:</label>
+                    <input type="date" id="maint-date" value="<%= new Date().toISOString().substring(0, 10) %>">
+
+                    <label for="maint-cost">Costo del Componente (€):</label>
+                    <input type="number" id="maint-cost" value="45.00">
+
+                    <label for="maint-km-input">KM de la Bici en el Servicio:</label>
+                    <input type="number" id="maint-km-input" value="1050">
+                    
+                    <button style="background-color: #007AFF;" onclick="handleReplacement()">Registrar Reemplazo y Resetear</button>
+                </section>
+            </div>
+
+            <div id="inventory" class="tab-content">
+                <section id="inventory-list-section">
+                    <h2>Componentes en Stock</h2>
+                    <div id="stock-list">Cargando inventario...</div>
+                </section>
+                
+                <details class="new-item-details">
+                    <summary>➕ Añadir/Usar Stock</summary>
+                    <div class="form-group">
+                        <label for="stock-part-id">ID Único del Recambio:</label>
+                        <input type="text" id="stock-part-id" placeholder="Ej: pastillas_xtr">
+                        <label for="stock-name">Nombre:</label>
+                        <input type="text" id="stock-name" placeholder="Pastillas de Freno XTR">
+                        <label for="stock-qty">Cantidad en Stock:</label>
+                        <input type="number" id="stock-qty" value="1">
+                        <label for="stock-compatibility">Bicicletas Compatibles (IDs separados por coma):</label>
+                        <input type="text" id="stock-compatibility" placeholder="bmx_roja, bici_prueba_123">
+                        
+                        <button onclick="addOrUpdateStock()" style="background-color: #4CAF50; margin-bottom: 10px;">Añadir/Actualizar Stock</button>
+                        <button onclick="useStock('stock-part-id')" style="background-color: #FF3B30;">Usar una Unidad (-1)</button>
+                    </div>
+                </details>
+            </div>
+
+            <div id="logs" class="tab-content">
+                <section id="status-log">
+                    <h2>📜 Log de Eventos y Errores</h2>
+                    <div id="log-output">Esperando acciones...</div>
+                </section>
+            </div>
+        </div>
     </main>
 
+    <div id="bike-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('bike-detail-modal')">&times;</span>
+            <h2 id="detail-bike-name"></h2>
+            <div class="detail-container">
+                <nav class="detail-tabs-container">
+                    <button class="detail-tab-button active" onclick="showDetailTab('components-view', this)">🛠️ Componentes</button>
+                    <button class="detail-tab-button" onclick="showDetailTab('history-view', this)">📅 Historial</button>
+                    <button class="detail-tab-button" onclick="showDetailTab('notes-view', this)">📝 Notas/Engrase</button>
+                </nav>
+
+                <div id="components-view" class="detail-tab-content active">
+                    <h3>Resumen de Componentes (Último Cambio)</h3>
+                    <div id="detail-components-list"></div>
+                </div>
+
+                <div id="history-view" class="detail-tab-content">
+                    <h3>Historial de Mantenimiento Reciente</h3>
+                    <div id="detail-history-list"></div>
+                </div>
+
+                <div id="notes-view" class="detail-tab-content">
+                    <h3>Notas y Tareas Pendientes</h3>
+                    <textarea id="detail-notes-input" placeholder="Añade aquí notas de engrase, ajustes de suspensión, o tareas pendientes..."></textarea>
+                    <button onclick="saveBikeNotes()" style="background-color: #007AFF; margin-top: 15px;">Guardar Notas</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="app.js"></script> 
 </body>
 </html>
