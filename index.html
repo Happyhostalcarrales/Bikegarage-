@@ -219,6 +219,28 @@
         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         border-color: #667eea;
       }
+
+      /* Botón de editar bicicleta en la card */
+      .edit-bike-btn {
+          background: #4299e1; /* Color azul para editar */
+          color: white;
+          border: none;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          cursor: pointer;
+          font-size: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          font-weight: 700;
+          margin-left: 8px;
+      }
+      .edit-bike-btn:hover {
+          background: #3182ce;
+          transform: scale(1.1);
+      }
       
       .bike-header {
         display: flex;
@@ -578,7 +600,7 @@
       .maintenance-header {
         display: flex;
         justify-content: space-between;
-        align-items: center; /* Alineación cambiada para el botón de editar */
+        align-items: center; 
         margin-bottom: 12px;
       }
       
@@ -590,7 +612,7 @@
 
       /* Estilo base para el botón de editar (azul) */
       .edit-maintenance {
-          background: #4299e1; /* Color azul para editar */
+          background: #4299e1; 
           color: white;
           border: none;
           width: 32px;
@@ -703,6 +725,53 @@
       .delete-maintenance:hover {
         background: #c53030;
         transform: scale(1.1);
+      }
+
+      /* Componentes editables */
+      .component-edit-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+        padding: 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #fff;
+      }
+
+      .component-item-edit {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: #f7fafc;
+        border-radius: 8px;
+        border-left: 3px solid #667eea;
+      }
+      .component-item-edit input[type="text"] {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+      }
+      .component-item-edit .delete-component-btn {
+          background: #e53e3e;
+          color: white;
+          border: none;
+          padding: 6px 10px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-weight: 700;
+      }
+      .add-component-btn {
+          background: #48bb78;
+          color: white;
+          border: none;
+          padding: 10px 15px;
+          border-radius: 8px;
+          font-weight: 700;
+          cursor: pointer;
+          margin-top: 10px;
       }
       
       .empty-state {
@@ -848,6 +917,7 @@
         justify-content: center;
         z-index: 1000;
         animation: fadeIn 0.3s ease;
+        overflow-y: auto; /* Permitir scroll en modals grandes */
       }
       
       @keyframes fadeIn {
@@ -859,9 +929,10 @@
         background: white;
         padding: 30px;
         border-radius: 16px;
-        max-width: 500px;
+        max-width: 650px; /* Ancho ajustado para la edición de componentes */
         width: 90%;
         animation: scaleIn 0.3s ease;
+        margin: 20px auto; /* Centrado con margen para el scroll */
       }
       
       @keyframes scaleIn {
@@ -1357,7 +1428,7 @@
       }
       .modal-content {
           padding: 20px;
-          width: 95%; 
+          max-width: 95%; /* Asegurar que quepa en pantalla pequeña */
       }
       .logout-button {
           top: 10px;
@@ -1372,6 +1443,50 @@
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
  <body>
+
+  <div id="edit-bike-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 800;">
+        🚴 Editar Bicicleta
+      </h3>
+      <form id="edit-bike-form">
+        <input type="hidden" id="edit-bike-id">
+        <div class="form-section">
+            <div class="form-grid">
+                <div class="form-group full-width"><label for="edit-bike-name">Nombre de la Bicicleta *</label> <input type="text" id="edit-bike-name" required placeholder="Ej: Mi MTB Roja"></div>
+                
+                <div class="form-group"><label for="edit-bike-type">Tipo de Bicicleta *</label> <select id="edit-bike-type" required> 
+                  <option value="Montaña">🏔️ Montaña (MTB)</option> 
+                  <option value="Carretera">🏁 Carretera</option> 
+                  <option value="Urbana">🏙️ Urbana</option> 
+                  <option value="Eléctrica">⚡ Eléctrica</option> 
+                  <option value="BMX">🎪 BMX</option> 
+                  <option value="Gravel">🌾 Gravel</option> 
+                  <option value="Híbrida">🔀 Híbrida</option> </select>
+                </div>
+                
+                <div class="form-group"><label for="edit-bike-color">Color *</label> <input type="text" id="edit-bike-color" required placeholder="Ej: Rojo"></div>
+                
+                <div class="form-group"><label for="edit-bike-km">Kilometraje Total (solo informativo)</label> <input type="number" id="edit-bike-km" disabled></div>
+
+            </div>
+        </div>
+
+        <div class="form-section" style="margin-top: 25px;">
+            <h4 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">⚙️ Componentes y Notas</h4>
+            <div id="components-list-edit" class="component-edit-list">
+                </div>
+            <button type="button" class="add-component-btn" onclick="addComponentInput()">+ Añadir Componente/Nota</button>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-primary" onclick="handleUpdateBike()">Guardar Cambios</button> 
+          <button type="button" class="btn-secondary" onclick="closeModal('edit-bike-modal')">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 
   <div id="edit-maintenance-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
@@ -1579,7 +1694,18 @@
     let userId = null;
     let dbRef = null; 
     let unsubscribeFirestore = null; 
-    let currentMaintenanceId = null; // Variable para almacenar el ID del mantenimiento que se está editando
+    let currentMaintenanceId = null; 
+    let currentBikeId = null; // NUEVO: Para edición de bicicleta
+
+    // Componentes de bicicleta por defecto (para facilitar la carga inicial)
+    const DEFAULT_COMPONENTS = [
+        { name: "Horquilla", notes: "Marca, modelo, recorrido...", id: 'comp-' + Date.now() + 1 },
+        { name: "Amortiguador", notes: "Marca, modelo...", id: 'comp-' + Date.now() + 2 },
+        { name: "Ruedas", notes: "Marca, modelo, ancho...", id: 'comp-' + Date.now() + 3 },
+        { name: "Transmisión", notes: "Marca y número de velocidades/platos", id: 'comp-' + Date.now() + 4 },
+        { name: "Frenos", notes: "Marca, modelo, tipo de pastillas", id: 'comp-' + Date.now() + 5 },
+    ];
+
 
     // --- 2. FUNCIONES DE AUTENTICACIÓN ---
 
@@ -1747,7 +1873,7 @@
     }
 
 
-    // --- 4. HANDLERS DE FORMULARIO DE CREACIÓN (SIN CAMBIOS) ---
+    // --- 4. HANDLERS DE FORMULARIO DE CREACIÓN / EDICIÓN ---
 
     async function handleAddBike(event) {
       event.preventDefault();
@@ -1762,6 +1888,7 @@
         bike_type: document.getElementById('bike-type').value,
         bike_color: document.getElementById('bike-color').value,
         total_km: parseFloat(document.getElementById('bike-km').value) || 0,
+        components: DEFAULT_COMPONENTS.map(c => ({...c, id: 'comp-' + Date.now() + Math.random()})), // Inicializar componentes
         created_at: new Date().toISOString()
       };
 
@@ -1778,83 +1905,208 @@
       }
     }
 
+    // NUEVO: Mostrar modal de edición de bicicleta
+    function showEditBikeModal(bikeId) {
+        const bike = allData.find(d => d.id === bikeId);
+        if (!bike) return;
+
+        currentBikeId = bikeId;
+
+        // 1. Rellenar campos principales
+        document.getElementById('edit-bike-id').value = bikeId;
+        document.getElementById('edit-bike-name').value = bike.bike_name;
+        document.getElementById('edit-bike-type').value = bike.bike_type;
+        document.getElementById('edit-bike-color').value = bike.bike_color;
+        document.getElementById('edit-bike-km').value = bike.total_km;
+
+        // 2. Rellenar y renderizar componentes
+        renderComponentInputs(bike.components || DEFAULT_COMPONENTS);
+
+        // 3. Mostrar el modal
+        document.getElementById('edit-bike-modal').style.display = 'flex';
+    }
+
+    // NUEVO: Manejar la actualización de la bicicleta
+    async function handleUpdateBike() {
+        const bikeId = document.getElementById('edit-bike-id').value;
+        const bike = allData.find(d => d.id === bikeId);
+        if (!bike) return;
+
+        const saveBtn = document.querySelector('#edit-bike-modal .btn-primary');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Actualizando...';
+
+        // 1. Recoger los componentes editados
+        const componentsListElement = document.getElementById('components-list-edit');
+        const updatedComponents = [];
+
+        componentsListElement.querySelectorAll('.component-item-edit').forEach(item => {
+            const nameInput = item.querySelector('.component-name-input');
+            const notesInput = item.querySelector('.component-notes-input');
+            const componentId = item.getAttribute('data-id');
+
+            if (nameInput.value.trim()) {
+                updatedComponents.push({
+                    id: componentId,
+                    name: nameInput.value.trim(),
+                    notes: notesInput ? notesInput.value.trim() : ''
+                });
+            }
+        });
+
+
+        const updatedBikeData = {
+            // Campos que pueden cambiar
+            bike_name: document.getElementById('edit-bike-name').value,
+            bike_type: document.getElementById('edit-bike-type').value,
+            bike_color: document.getElementById('edit-bike-color').value,
+            // total_km se actualiza con el modal de km, aquí solo se guarda el resto:
+            components: updatedComponents, // Guardar la lista de componentes actualizada
+            // ID necesario para la función updateData
+            id: bikeId
+        };
+        
+        // Llamar a la función de actualización de Firestore
+        const result = await updateData(updatedBikeData);
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar Cambios';
+
+        if (result.isOk) {
+            closeModal('edit-bike-modal');
+            showToast("✅ Bicicleta actualizada correctamente");
+        } else {
+            showToast("❌ Error al actualizar la bicicleta");
+        }
+    }
+
+    // NUEVO: Renderizar los inputs de componentes en el modal de edición
+    function renderComponentInputs(components) {
+        const listContainer = document.getElementById('components-list-edit');
+        listContainer.innerHTML = ''; // Limpiar la lista
+
+        if (!components || components.length === 0) {
+            components = DEFAULT_COMPONENTS;
+        }
+
+        components.forEach(comp => {
+            const item = document.createElement('div');
+            item.className = 'component-item-edit';
+            item.setAttribute('data-id', comp.id);
+            item.innerHTML = `
+                <input type="text" class="component-name-input" placeholder="Nombre (Ej: Horquilla)" value="${comp.name}">
+                <input type="text" class="component-notes-input" placeholder="Notas (Ej: RockShox 150mm)" value="${comp.notes || ''}">
+                <button type="button" class="delete-component-btn" onclick="removeComponentInput(this)">X</button>
+            `;
+            listContainer.appendChild(item);
+        });
+    }
+
+    // NUEVO: Añadir un nuevo campo de componente al modal de edición
+    function addComponentInput() {
+        const listContainer = document.getElementById('components-list-edit');
+        const newItemId = 'comp-' + Date.now() + Math.random(); 
+        
+        const item = document.createElement('div');
+        item.className = 'component-item-edit';
+        item.setAttribute('data-id', newItemId);
+        item.innerHTML = `
+            <input type="text" class="component-name-input" placeholder="Nombre (Ej: Cadena)" value="">
+            <input type="text" class="component-notes-input" placeholder="Notas (Ej: KMC X11)" value="">
+            <button type="button" class="delete-component-btn" onclick="removeComponentInput(this)">X</button>
+        `;
+        listContainer.appendChild(item);
+    }
+
+    // NUEVO: Eliminar un campo de componente
+    function removeComponentInput(buttonElement) {
+        buttonElement.closest('.component-item-edit').remove();
+    }
+
+
+    // --- 6. HANDLERS CRUD RESTANTES (MANTENIMIENTO y STOCK) ---
+
+    // (Las funciones handleAddMaintenance, handleAddStock, deleteBike, deleteMaintenance, deleteStock,
+    // updateStockQuantity y updateBikeKm se mantienen como en la última versión, usando updateData/deleteData)
+    // El código se mantiene sin cambios para no alargar demasiado, asumiendo que ya funcionan.
+
     async function handleAddMaintenance(event) {
-      event.preventDefault();
-      
-      const saveBtn = document.getElementById('save-maintenance-btn');
-      saveBtn.disabled = true;
-      saveBtn.textContent = 'Guardando...';
+        event.preventDefault();
+        
+        const saveBtn = document.getElementById('save-maintenance-btn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Guardando...';
 
-      const bikeId = document.getElementById('maintenance-bike').value;
-      const bike = allData.find(d => d.id === bikeId);
-      if (!bike) {
-          showToast("⚠️ Bicicleta no encontrada.");
-          saveBtn.disabled = false;
-          saveBtn.textContent = 'Guardar Mantenimiento';
-          return;
-      }
-      
-      const kmAtMaintenance = parseFloat(document.getElementById('maintenance-km').value) || null;
-      const nextMaintenanceKm = parseFloat(document.getElementById('next-maintenance-km').value) || null;
+        const bikeId = document.getElementById('maintenance-bike').value;
+        const bike = allData.find(d => d.id === bikeId);
+        if (!bike) {
+            showToast("⚠️ Bicicleta no encontrada.");
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar Mantenimiento';
+            return;
+        }
+        
+        const kmAtMaintenance = parseFloat(document.getElementById('maintenance-km').value) || null;
+        const nextMaintenanceKm = parseFloat(document.getElementById('next-maintenance-km').value) || null;
 
-      const maintenanceData = {
-        type: 'maintenance',
-        bike_id: bikeId,
-        bike_name: bike.bike_name,
-        maintenance_type: document.getElementById('maintenance-type').value,
-        component: document.getElementById('maintenance-component').value,
-        date: document.getElementById('maintenance-date').value,
-        km_at_maintenance: kmAtMaintenance,
-        cost: parseFloat(document.getElementById('maintenance-cost').value) || 0,
-        notes: document.getElementById('maintenance-notes').value,
-        next_maintenance_km: nextMaintenanceKm,
-        created_at: new Date().toISOString()
-      };
+        const maintenanceData = {
+            type: 'maintenance',
+            bike_id: bikeId,
+            bike_name: bike.bike_name,
+            maintenance_type: document.getElementById('maintenance-type').value,
+            component: document.getElementById('maintenance-component').value,
+            date: document.getElementById('maintenance-date').value,
+            km_at_maintenance: kmAtMaintenance,
+            cost: parseFloat(document.getElementById('maintenance-cost').value) || 0,
+            notes: document.getElementById('maintenance-notes').value,
+            next_maintenance_km: nextMaintenanceKm,
+            created_at: new Date().toISOString()
+        };
 
-      const result = await createData(maintenanceData);
-      
-      saveBtn.disabled = false;
-      saveBtn.textContent = 'Guardar Mantenimiento';
+        const result = await createData(maintenanceData);
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar Mantenimiento';
 
-      if (result.isOk) {
-        hideAddMaintenanceForm();
-        showToast("✅ Mantenimiento registrado correctamente");
-      } else {
-        showToast("❌ Error al guardar el mantenimiento");
-      }
+        if (result.isOk) {
+            hideAddMaintenanceForm();
+            showToast("✅ Mantenimiento registrado correctamente");
+        } else {
+            showToast("❌ Error al guardar el mantenimiento");
+        }
     }
 
     async function handleAddStock(event) {
-      event.preventDefault();
-      
-      const saveBtn = document.getElementById('save-stock-btn');
-      saveBtn.disabled = true;
-      saveBtn.textContent = 'Guardando...';
+        event.preventDefault();
+        
+        const saveBtn = document.getElementById('save-stock-btn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Guardando...';
 
-      const stockData = {
-        type: 'stock',
-        stock_name: document.getElementById('stock-name').value,
-        stock_category: document.getElementById('stock-category').value,
-        stock_brand: document.getElementById('stock-brand').value || '',
-        stock_quantity: parseInt(document.getElementById('stock-quantity').value) || 0,
-        stock_min_quantity: parseInt(document.getElementById('stock-min-quantity').value) || 1,
-        stock_unit_price: parseFloat(document.getElementById('stock-unit-price').value) || 0,
-        stock_location: document.getElementById('stock-location').value || '',
-        stock_notes: document.getElementById('stock-notes').value || '',
-        created_at: new Date().toISOString()
-      };
+        const stockData = {
+            type: 'stock',
+            stock_name: document.getElementById('stock-name').value,
+            stock_category: document.getElementById('stock-category').value,
+            stock_brand: document.getElementById('stock-brand').value || '',
+            stock_quantity: parseInt(document.getElementById('stock-quantity').value) || 0,
+            stock_min_quantity: parseInt(document.getElementById('stock-min-quantity').value) || 1,
+            stock_unit_price: parseFloat(document.getElementById('stock-unit-price').value) || 0,
+            stock_location: document.getElementById('stock-location').value || '',
+            stock_notes: document.getElementById('stock-notes').value || '',
+            created_at: new Date().toISOString()
+        };
 
-      const result = await createData(stockData);
-      
-      saveBtn.disabled = false;
-      saveBtn.textContent = 'Guardar Material';
+        const result = await createData(stockData);
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar Material';
 
-      if (result.isOk) {
-        hideAddStockForm();
-        showToast("✅ Material añadido al inventario");
-      } else {
-        showToast("❌ Error al guardar el material");
-      }
+        if (result.isOk) {
+            hideAddStockForm();
+            showToast("✅ Material añadido al inventario");
+        } else {
+            showToast("❌ Error al guardar el material");
+        }
     }
 
     async function deleteBike(bikeId) {
@@ -1943,7 +2195,7 @@
       const result = await updateData(updatedBike);
 
       if (result.isOk) {
-        closeModal('km-modal'); // Asegúrate de que el modal de KM tenga un ID
+        closeModal('km-modal'); 
         showToast("✅ Kilometraje actualizado correctamente");
       } else {
         showToast("❌ Error al actualizar el kilometraje");
@@ -1951,38 +2203,7 @@
     }
 
 
-    // --- 5. FUNCIONES DE EDICIÓN DE MANTENIMIENTO ---
-
-    /**
-     * Muestra el modal de edición de mantenimiento y rellena los campos.
-     * @param {string} maintenanceId - ID del mantenimiento a editar.
-     */
-    function showEditMaintenanceModal(maintenanceId) {
-        const maintenance = allData.find(d => d.id === maintenanceId);
-        if (!maintenance) return;
-
-        currentMaintenanceId = maintenanceId; // Guarda el ID globalmente
-        
-        // Rellenar campos del modal
-        document.getElementById('edit-maintenance-id').value = maintenanceId;
-        document.getElementById('edit-maintenance-bike').value = maintenance.bike_name;
-        
-        // Asignar valores (si existen)
-        document.getElementById('edit-maintenance-type').value = maintenance.maintenance_type || '';
-        document.getElementById('edit-maintenance-component').value = maintenance.component || '';
-        document.getElementById('edit-maintenance-date').value = maintenance.date || '';
-        document.getElementById('edit-maintenance-km').value = maintenance.km_at_maintenance || '';
-        document.getElementById('edit-maintenance-cost').value = maintenance.cost || '';
-        document.getElementById('edit-next-maintenance-km').value = maintenance.next_maintenance_km || '';
-        document.getElementById('edit-maintenance-notes').value = maintenance.notes || '';
-
-        // Mostrar el modal
-        document.getElementById('edit-maintenance-modal').style.display = 'flex';
-    }
-
-    /**
-     * Maneja el guardado de los cambios del mantenimiento.
-     */
+    // Función ya existente para edición de mantenimientos (Llamada al presionar Guardar)
     async function handleUpdateMaintenance() {
         const maintenanceId = document.getElementById('edit-maintenance-id').value;
         const maintenance = allData.find(d => d.id === maintenanceId);
@@ -1996,7 +2217,6 @@
         const nextMaintenanceKm = parseFloat(document.getElementById('edit-next-maintenance-km').value) || null;
 
         const updatedData = {
-            // Campos que pueden cambiar
             maintenance_type: document.getElementById('edit-maintenance-type').value,
             component: document.getElementById('edit-maintenance-component').value,
             date: document.getElementById('edit-maintenance-date').value,
@@ -2004,11 +2224,9 @@
             cost: parseFloat(document.getElementById('edit-maintenance-cost').value) || 0,
             notes: document.getElementById('edit-maintenance-notes').value,
             next_maintenance_km: nextMaintenanceKm,
-            // ID necesario para la función updateData
             id: maintenanceId
         };
         
-        // Llamar a la función de actualización de Firestore
         const result = await updateData(updatedData);
 
         saveBtn.disabled = false;
@@ -2023,7 +2241,7 @@
     }
 
 
-    // --- 6. FUNCIONES DE UI Y RENDERIZADO ---
+    // --- 7. FUNCIONES DE UI Y RENDERIZADO ---
 
     const defaultConfig = {
       app_title: "🚴 Mis Bicicletas",
@@ -2152,6 +2370,11 @@
           }
         }
 
+        // Listado de componentes para mostrar
+        const componentsHtml = (bike.components || [])
+          .map(c => `<span style="display: block; font-size: 13px; color: #718096;">• ${c.name}: ${c.notes}</span>`).join('');
+
+
         return `
           <div class="bike-card">
             <div class="bike-header">
@@ -2160,8 +2383,17 @@
                 <div class="bike-name">${bike.bike_name}</div>
                 <div class="bike-type">${bike.bike_type} • ${bike.bike_color}</div>
               </div>
-              <button class="delete-bike" onclick="deleteBike('${bike.id}')" title="Eliminar bicicleta">×</button>
+              <div style="display: flex; align-items: center;">
+                <button class="edit-bike-btn" onclick="showEditBikeModal('${bike.id}')" title="Editar detalles y componentes">✏️</button>
+                <button class="delete-bike" onclick="deleteBike('${bike.id}')" title="Eliminar bicicleta">×</button>
+              </div>
             </div>
+            
+            <div style="margin-bottom: 15px; padding: 10px; background: #f7fafc; border-radius: 8px;">
+                <strong style="font-size: 13px; display: block; margin-bottom: 5px;">Componentes:</strong>
+                ${componentsHtml || '<span style="font-style: italic; font-size: 12px; color: #a0aec0;">No hay componentes añadidos.</span>'}
+            </div>
+            
             <div class="bike-km-display">
               <div class="km-value">
                 <span>📍</span>
@@ -2657,7 +2889,6 @@
       document.body.appendChild(modal);
     }
 
-    // Modificamos closeModal para que reciba el ID del modal a cerrar
     function closeModal(modalId) {
       const modal = document.getElementById(modalId);
       if (modal) {
@@ -2665,10 +2896,9 @@
       }
     }
 
-    // Actualizamos showToast para que no interfiera con el modal
     function showToast(message) {
       let toast = document.querySelector('.toast');
-      if (toast) toast.remove(); // Asegura que solo haya uno
+      if (toast) toast.remove(); 
 
       toast = document.createElement('div');
       toast.className = 'toast';
@@ -2679,6 +2909,15 @@
         toast.remove();
       }, 3000);
     }
+
+    // Manejar el cierre del modal de edición de bicicleta con la tecla ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+          if (document.getElementById('edit-maintenance-modal')) closeModal('edit-maintenance-modal');
+          if (document.getElementById('edit-bike-modal')) closeModal('edit-bike-modal');
+          if (document.getElementById('km-modal')) closeModal('km-modal');
+      }
+    });
 
     init();
   </script>
