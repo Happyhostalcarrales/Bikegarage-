@@ -11,7 +11,7 @@
 
   <style>
     /* ---------------------------------------------------------------------- */
-    /* ESTILOS DE LA APLICACIÓN (Mismos que el código original) */
+    /* ESTILOS BASE */
     /* ---------------------------------------------------------------------- */
     body {
         box-sizing: border-box;
@@ -430,6 +430,11 @@
         border-color: #667eea;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
       }
+
+      /* Estilo específico para input de tipo file */
+      .form-group input[type="file"] {
+        padding-top: 10px;
+      }
       
       .form-group textarea {
         resize: vertical;
@@ -573,8 +578,36 @@
       .maintenance-header {
         display: flex;
         justify-content: space-between;
-        align-items: start;
+        align-items: center; /* Alineación cambiada para el botón de editar */
         margin-bottom: 12px;
+      }
+      
+      /* Nuevo estilo para los botones de acción en la tarjeta de mantenimiento */
+      .maintenance-actions {
+          display: flex;
+          gap: 8px;
+      }
+
+      /* Estilo base para el botón de editar (azul) */
+      .edit-maintenance {
+          background: #4299e1; /* Color azul para editar */
+          color: white;
+          border: none;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          cursor: pointer;
+          font-size: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          font-weight: 700;
+      }
+
+      .edit-maintenance:hover {
+          background: #3182ce;
+          transform: scale(1.1);
       }
       
       .maintenance-title {
@@ -655,17 +688,21 @@
         background: #e53e3e;
         color: white;
         border: none;
-        padding: 8px 16px;
-        border-radius: 8px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
         cursor: pointer;
-        font-size: 13px;
-        font-weight: 700;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         transition: all 0.3s ease;
+        font-weight: 700;
       }
       
       .delete-maintenance:hover {
         background: #c53030;
-        transform: scale(1.05);
+        transform: scale(1.1);
       }
       
       .empty-state {
@@ -1109,7 +1146,7 @@
         color: #c53030;
         border: 2px solid #fc8181;
       }
-
+    
     /* ---------------------------------------------------------------------- */
     /* ESTILOS DE AUTENTICACIÓN (LOGIN) */
     /* ---------------------------------------------------------------------- */
@@ -1200,12 +1237,188 @@
     .logout-button:hover {
         background: rgba(255, 255, 255, 0.5);
     }
+
+    /* ---------------------------------------------------------------------- */
+    /* ADAPTACIÓN A MÓVILES Y TABLETS (Media Queries) */
+    /* ---------------------------------------------------------------------- */
+
+    /* Pantallas medianas (Tablets en horizontal y vertical, ~768px a 1200px) */
+    @media (max-width: 1200px) {
+      .container {
+        padding: 15px; 
+      }
+      
+      .tabs {
+        padding: 8px; 
+      }
+      
+      .stat-card {
+        padding: 20px;
+      }
+      .stat-value {
+        font-size: 32px; 
+      }
+    }
+
+    /* Pantallas pequeñas (Móviles) */
+    @media (max-width: 768px) {
+      /* 1. LAYOUT PRINCIPAL */
+      .container {
+        padding: 10px; 
+      }
+      
+      .header h1 {
+        font-size: 32px; 
+      }
+      .content {
+        padding: 20px; 
+        border-radius: 12px;
+      }
+
+      /* 2. NAVEGACIÓN (TABS) */
+      .tabs {
+        flex-wrap: wrap; 
+        gap: 8px;
+        padding: 8px;
+      }
+      .tab {
+        flex-basis: 48%; 
+        min-width: unset;
+        font-size: 14px;
+        padding: 12px 10px;
+      }
+
+      /* 3. GRIDS: Apilar tarjetas */
+      .stats-grid {
+        grid-template-columns: 1fr 1fr; 
+      }
+      .bike-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+      }
+      .stock-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+      }
+
+      /* 4. FORMULARIOS */
+      .form-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+      }
+      .form-group.full-width {
+        grid-column: 1 / 1;
+      }
+      .form-actions {
+        flex-direction: column; 
+        gap: 10px;
+      }
+      .btn-primary, .btn-secondary {
+        padding: 14px;
+      }
+
+      /* 5. BARRA DE HERRAMIENTAS (Toolbar) */
+      .toolbar {
+        flex-direction: column; 
+        align-items: stretch;
+        padding: 10px;
+        gap: 10px;
+      }
+      .search-box {
+        width: 100%;
+      }
+      .filter-group {
+        flex-direction: column; 
+        align-items: flex-start;
+        width: 100%;
+      }
+      .filter-group select {
+        width: 100%;
+        min-width: unset;
+      }
+
+      /* 6. OTROS AJUSTES DE TARJETAS */
+      .bike-card, .stock-card {
+        padding: 20px;
+        border-radius: 12px;
+      }
+      .maintenance-item {
+        padding: 15px;
+        border-radius: 10px;
+      }
+      .maintenance-meta {
+        flex-direction: column; 
+        gap: 8px;
+      }
+
+      /* 7. AUTH Y MODAL */
+      .auth-card {
+          padding: 30px;
+      }
+      .modal-content {
+          padding: 20px;
+          width: 95%; 
+      }
+      .logout-button {
+          top: 10px;
+          right: 10px;
+          padding: 8px 12px;
+          font-size: 12px;
+      }
+    }
   </style>
 
   <style>@view-transition { navigation: auto; }</style>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
  <body>
+
+  <div id="edit-maintenance-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 800;">
+        🔧 Editar Mantenimiento
+      </h3>
+      <form id="edit-maintenance-form">
+        <input type="hidden" id="edit-maintenance-id">
+        <div class="form-grid">
+          
+          <div class="form-group"><label for="edit-maintenance-bike">Bicicleta</label> <input type="text" id="edit-maintenance-bike" disabled></div>
+
+          <div class="form-group"><label for="edit-maintenance-type">Tipo de Mantenimiento *</label> <select id="edit-maintenance-type" required> 
+            <option value="Cambio de componente">🔄 Cambio de componente</option>
+            <option value="Reparación">🔨 Reparación</option> 
+            <option value="Limpieza">🧼 Limpieza</option> 
+            <option value="Ajuste">⚙️ Ajuste</option> 
+            <option value="Revisión general">✅ Revisión general</option> 
+            <option value="Lubricación">💧 Lubricación</option> 
+          </select></div>
+
+          <div class="form-group"><label for="edit-maintenance-component">Componente *</label> <select id="edit-maintenance-component" required>
+            <optgroup label="Transmisión"> <option value="Cadena">⛓️ Cadena</option> <option value="Cassette">⚙️ Cassette</option> <option value="Platos">🔘 Platos</option> <option value="Bielas">🔧 Bielas</option> <option value="Cambio">🔄 Cambio</option> <option value="Desviador">↔️ Desviador</option> <option value="Cables">📏 Cables</option> <option value="Fundas">🔌 Fundas</option> </optgroup> 
+            <optgroup label="Ruedas y Neumáticos"> <option value="Cubierta delantera">🛞 Cubierta delantera</option> <option value="Cubierta trasera">🛞 Cubierta trasera</option> <option value="Cámara delantera">⭕ Cámara delantera</option> <option value="Cámara trasera">⭕ Cámara trasera</option> <option value="Llanta delantera">⚪ Llanta delantera</option> <option value="Llanta trasera">⚪ Llanta trasera</option> <option value="Radios">📍 Radios</option> </optgroup> 
+            <optgroup label="Frenos"> <option value="Frenos">🛑 Frenos</option> <option value="Pastillas de freno">🔲 Pastillas de freno</option> <option value="Discos de freno">💿 Discos de freno</option> <option value="Líquido de frenos">💧 Líquido de frenos</option> </optgroup> 
+            <optgroup label="Suspensión"> <option value="Horquilla">🍴 Horquilla</option> <option value="Amortiguador">🔩 Amortiguador</option> </optgroup> 
+            <optgroup label="Cockpit"> <option value="Manillar">🎯 Manillar</option> <option value="Potencia">📐 Potencia</option> <option value="Puños">✊ Puños</option> <option value="Cinta manillar">🎀 Cinta manillar</option> </optgroup> 
+            <optgroup label="Sillín"> <option value="Sillín">🪑 Sillín</option> <option value="Tija">📏 Tija</option> </optgroup> 
+            <optgroup label="Otros"> <option value="Pedales">👟 Pedales</option> <option value="Pedalier">⚙️ Pedalier</option> <option value="Dirección">🧭 Dirección</option> <option value="Otro">❓ Otro</option> </optgroup>
+          </select></div>
+
+          <div class="form-group"><label for="edit-maintenance-date">Fecha *</label> <input type="date" id="edit-maintenance-date" required></div>
+          <div class="form-group"><label for="edit-maintenance-km">Kilometraje en el Mantenimiento</label> <input type="number" id="edit-maintenance-km" placeholder="Km actuales" min="0" step="0.1"></div>
+          <div class="form-group"><label for="edit-maintenance-cost">Coste (€)</label> <input type="number" id="edit-maintenance-cost" placeholder="0.00" min="0" step="0.01"></div>
+          <div class="form-group"><label for="edit-next-maintenance-km">Próximo Mantenimiento (Km)</label> <input type="number" id="edit-next-maintenance-km" placeholder="Ej: 500 km después" min="0" step="1"></div>
+          
+          <div class="form-group full-width"><label for="edit-maintenance-notes">Notas y Observaciones</label> <textarea id="edit-maintenance-notes" placeholder="Añade detalles sobre el mantenimiento..."></textarea></div>
+
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-primary" onclick="handleUpdateMaintenance()">Guardar Cambios</button> 
+          <button type="button" class="btn-secondary" onclick="closeModal('edit-maintenance-modal')">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 
   <div id="login-view" style="display: none;">
     <div class="auth-card">
@@ -1334,14 +1547,6 @@
             </form>
           </div>
         </div>
-        <div class="toolbar">
-          <div class="search-box"><span class="search-icon">🔍</span> <input type="text" id="search-stock" placeholder="Buscar materiales..." oninput="filterStock()">
-          </div>
-          <div class="filter-group"><label for="filter-stock-category">Categoría:</label> <select id="filter-stock-category" onchange="filterStock()"> <option value="">Todas</option> </select>
-          </div>
-          <div class="filter-group"><label for="filter-stock-status">Estado:</label> <select id="filter-stock-status" onchange="filterStock()"> <option value="">Todos</option> <option value="ok">✅ Stock OK</option> <option value="low">⚠️ Stock Bajo</option> <option value="out">🚨 Sin Stock</option> </select>
-          </div>
-        </div>
         <div id="stock-list" class="stock-grid"></div>
       </div>
       <div id="stats-view" class="view">
@@ -1354,7 +1559,7 @@
   </div>
   
   <script>
-    // --- 2. FIREBASE CONFIGURACIÓN E INICIALIZACIÓN (¡TUS DATOS!) ---
+    // --- 1. FIREBASE CONFIGURACIÓN E INICIALIZACIÓN ---
     const firebaseConfig = {
       apiKey: "AIzaSyA3D7fH6QpdG7mUSNhFfUzD6RWje8TpGEk",
       authDomain: "hostaldatossincro.firebaseapp.com",
@@ -1372,10 +1577,11 @@
     // VARIABLES GLOBALES
     let allData = [];
     let userId = null;
-    let dbRef = null; // Referencia a la colección específica del usuario
+    let dbRef = null; 
     let unsubscribeFirestore = null; 
+    let currentMaintenanceId = null; // Variable para almacenar el ID del mantenimiento que se está editando
 
-    // --- FUNCIONES DE AUTENTICACIÓN ---
+    // --- 2. FUNCIONES DE AUTENTICACIÓN ---
 
     function displayAuthError(message) {
       const errorEl = document.getElementById('auth-error');
@@ -1435,7 +1641,6 @@
         document.getElementById('app-view').style.display = 'block';
         userId = user.uid;
         // La referencia a la base de datos es específica para el usuario
-        // Colección: users -> [UID] -> appData
         dbRef = db.collection('users').doc(userId).collection('appData');
         listenToDataChanges(); // Iniciar la sincronización
       } else {
@@ -1443,9 +1648,9 @@
         document.getElementById('login-view').style.display = 'flex';
         document.getElementById('app-view').style.display = 'none';
         userId = null;
-        allData = []; // Limpiar datos locales
+        allData = []; 
         if (unsubscribeFirestore) {
-          unsubscribeFirestore(); // Detener la sincronización
+          unsubscribeFirestore(); 
           unsubscribeFirestore = null;
         }
         // Limpiar vistas
@@ -1456,11 +1661,11 @@
       }
     });
 
-    // --- FUNCIONES DE FIREBASE FIRESTORE PARA SINCRONIZACIÓN ---
+    // --- 3. FUNCIONES DE FIREBASE FIRESTORE PARA SINCRONIZACIÓN Y CRUD ---
 
     function listenToDataChanges() {
       if (unsubscribeFirestore) {
-        unsubscribeFirestore(); // Detener la escucha anterior
+        unsubscribeFirestore(); 
       }
       
       // Sincronización en tiempo real
@@ -1495,7 +1700,7 @@
       });
     }
 
-    // Manejador de cambios (antiguo dataHandler)
+    // Manejador de cambios 
     function onDataChanged(data) {
       allData = data;
       renderBikes();
@@ -1542,7 +1747,7 @@
     }
 
 
-    // --- HANDLERS DE FORMULARIO ACTUALIZADOS ---
+    // --- 4. HANDLERS DE FORMULARIO DE CREACIÓN (SIN CAMBIOS) ---
 
     async function handleAddBike(event) {
       event.preventDefault();
@@ -1588,6 +1793,7 @@
           saveBtn.textContent = 'Guardar Mantenimiento';
           return;
       }
+      
       const kmAtMaintenance = parseFloat(document.getElementById('maintenance-km').value) || null;
       const nextMaintenanceKm = parseFloat(document.getElementById('next-maintenance-km').value) || null;
 
@@ -1707,7 +1913,7 @@
         showToast("✅ Material eliminado del inventario");
       }
     }
-
+    
     async function updateStockQuantity(stockId, change) {
       const stock = allData.find(d => d.id === stockId);
       if (!stock) return;
@@ -1737,14 +1943,87 @@
       const result = await updateData(updatedBike);
 
       if (result.isOk) {
-        closeModal();
+        closeModal('km-modal'); // Asegúrate de que el modal de KM tenga un ID
         showToast("✅ Kilometraje actualizado correctamente");
       } else {
         showToast("❌ Error al actualizar el kilometraje");
       }
     }
 
-    // --- FUNCIONES DE UI Y RENDERIZADO (NO MODIFICADAS) ---
+
+    // --- 5. FUNCIONES DE EDICIÓN DE MANTENIMIENTO ---
+
+    /**
+     * Muestra el modal de edición de mantenimiento y rellena los campos.
+     * @param {string} maintenanceId - ID del mantenimiento a editar.
+     */
+    function showEditMaintenanceModal(maintenanceId) {
+        const maintenance = allData.find(d => d.id === maintenanceId);
+        if (!maintenance) return;
+
+        currentMaintenanceId = maintenanceId; // Guarda el ID globalmente
+        
+        // Rellenar campos del modal
+        document.getElementById('edit-maintenance-id').value = maintenanceId;
+        document.getElementById('edit-maintenance-bike').value = maintenance.bike_name;
+        
+        // Asignar valores (si existen)
+        document.getElementById('edit-maintenance-type').value = maintenance.maintenance_type || '';
+        document.getElementById('edit-maintenance-component').value = maintenance.component || '';
+        document.getElementById('edit-maintenance-date').value = maintenance.date || '';
+        document.getElementById('edit-maintenance-km').value = maintenance.km_at_maintenance || '';
+        document.getElementById('edit-maintenance-cost').value = maintenance.cost || '';
+        document.getElementById('edit-next-maintenance-km').value = maintenance.next_maintenance_km || '';
+        document.getElementById('edit-maintenance-notes').value = maintenance.notes || '';
+
+        // Mostrar el modal
+        document.getElementById('edit-maintenance-modal').style.display = 'flex';
+    }
+
+    /**
+     * Maneja el guardado de los cambios del mantenimiento.
+     */
+    async function handleUpdateMaintenance() {
+        const maintenanceId = document.getElementById('edit-maintenance-id').value;
+        const maintenance = allData.find(d => d.id === maintenanceId);
+        if (!maintenance) return;
+
+        const saveBtn = document.querySelector('#edit-maintenance-modal .btn-primary');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Actualizando...';
+        
+        const kmAtMaintenance = parseFloat(document.getElementById('edit-maintenance-km').value) || null;
+        const nextMaintenanceKm = parseFloat(document.getElementById('edit-next-maintenance-km').value) || null;
+
+        const updatedData = {
+            // Campos que pueden cambiar
+            maintenance_type: document.getElementById('edit-maintenance-type').value,
+            component: document.getElementById('edit-maintenance-component').value,
+            date: document.getElementById('edit-maintenance-date').value,
+            km_at_maintenance: kmAtMaintenance,
+            cost: parseFloat(document.getElementById('edit-maintenance-cost').value) || 0,
+            notes: document.getElementById('edit-maintenance-notes').value,
+            next_maintenance_km: nextMaintenanceKm,
+            // ID necesario para la función updateData
+            id: maintenanceId
+        };
+        
+        // Llamar a la función de actualización de Firestore
+        const result = await updateData(updatedData);
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar Cambios';
+
+        if (result.isOk) {
+            closeModal('edit-maintenance-modal');
+            showToast("✅ Mantenimiento actualizado correctamente");
+        } else {
+            showToast("❌ Error al actualizar el mantenimiento");
+        }
+    }
+
+
+    // --- 6. FUNCIONES DE UI Y RENDERIZADO ---
 
     const defaultConfig = {
       app_title: "🚴 Mis Bicicletas",
@@ -1975,7 +2254,10 @@
                 <div class="maintenance-title">${m.maintenance_type}</div>
                 <div class="maintenance-bike">🚴 ${m.bike_name}</div>
               </div>
-              <button class="delete-maintenance" onclick="deleteMaintenance('${m.id}')">Eliminar</button>
+              <div class="maintenance-actions">
+                  <button class="edit-maintenance" onclick="showEditMaintenanceModal('${m.id}')" title="Editar mantenimiento">✏️</button>
+                  <button class="delete-maintenance" onclick="deleteMaintenance('${m.id}')" title="Eliminar mantenimiento">×</button>
+              </div>
             </div>
             <div>
               <span class="maintenance-component">${m.component}</span>
@@ -1994,7 +2276,7 @@
 
     function renderStock() {
       const stockList = document.getElementById('stock-list');
-      let stock = allData.filter(d => d.type === 'stock');
+      const stock = allData.filter(d => d.type === 'stock');
 
       if (currentStockCategoryFilter) {
         stock = stock.filter(s => s.stock_category === currentStockCategoryFilter);
@@ -2115,7 +2397,7 @@
         `;
       }).join('');
     }
-
+    
     function renderStats() {
       const bikes = allData.filter(d => d.type === 'bike');
       const maintenance = allData.filter(d => d.type === 'maintenance');
@@ -2341,7 +2623,10 @@
 
       const modal = document.createElement('div');
       modal.className = 'modal-overlay';
+      modal.id = 'km-modal'; // Añadir ID para closeModal
       
+      const currencySymbol = defaultConfig.currency_symbol;
+
       modal.innerHTML = `
         <div class="modal-content">
           <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 800;">
@@ -2360,28 +2645,32 @@
           </div>
           <div style="display: flex; gap: 10px; margin-top: 20px;">
             <button onclick="updateBikeKm('${bikeId}')" class="btn-primary" style="flex: 1;">Actualizar</button>
-            <button onclick="closeModal()" class="btn-secondary" style="flex: 1;">Cancelar</button>
+            <button onclick="closeModal('km-modal')" class="btn-secondary" style="flex: 1;">Cancelar</button>
           </div>
         </div>
       `;
       
       modal.onclick = (e) => {
-        if (e.target === modal) closeModal();
+        if (e.target === modal) closeModal('km-modal');
       };
       
       document.body.appendChild(modal);
-      window.currentModal = modal;
     }
 
-    function closeModal() {
-      if (window.currentModal) {
-        window.currentModal.remove();
-        window.currentModal = null;
+    // Modificamos closeModal para que reciba el ID del modal a cerrar
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.remove();
       }
     }
 
+    // Actualizamos showToast para que no interfiera con el modal
     function showToast(message) {
-      const toast = document.createElement('div');
+      let toast = document.querySelector('.toast');
+      if (toast) toast.remove(); // Asegura que solo haya uno
+
+      toast = document.createElement('div');
       toast.className = 'toast';
       toast.textContent = message;
       document.body.appendChild(toast);
