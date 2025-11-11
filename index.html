@@ -139,7 +139,44 @@
                 </nav>
 
                 <div id="components-view" class="detail-tab-content active">
-                    <h3>Resumen de Componentes (Último Cambio)</h3>
+                    <h3>Resumen de Compo<main>
+        <nav class="tabs-container">
+            <button class="tab-button active" onclick="showSection('dashboard')">🛠️ Panel de Taller</button> <button class="tab-button" onclick="showSection('maintenance')">🔧 Mantenimiento/Reemplazo</button>
+            <button class="tab-button" onclick="showSection('inventory')">📦 Inventario y Stock</button>
+            <button class="tab-button" onclick="showSection('logs')">📜 Log de Eventos</button>
+            <button class="tab-button" onclick="showSection('admin')">⚙️ Admin</button> </nav>
+
+        <div id="dashboard" class="tab-content active">
+            <h2>Gestión de Reparaciones y Trazabilidad (CRM)</h2>
+            <p class="description">Visualiza las bicicletas por el estado actual de su servicio. (Panel Kanban simple)</p>
+            
+            <section id="repair-panel-board">
+                <div id="panel-board-container" class="kanban-board">
+                    Cargando trabajos...
+                </div>
+            </section>
+        </div>
+        
+        <div id="admin" class="tab-content">
+            <section id="admin-tools">
+                <h2>⚙️ Herramientas de Administración</h2>
+                <p class="description">Para crear datos iniciales (Componentes, Clientes, etc.)</p>
+                <h3>Añadir Componente (Para una Bici)</h3>
+                <label for="admin-comp-bike-id">ID Bicicleta:</label>
+                <input type="text" id="admin-comp-bike-id" value="bike_prueba_123">
+                <label for="admin-comp-id">ID Componente:</label>
+                <input type="text" id="admin-comp-id" placeholder="Ej: cadena_km750">
+                <label for="admin-comp-max-km">Max KM Alerta:</label>
+                <input type="number" id="admin-comp-max-km" value="750">
+                <button onclick="addInitialComponent()" style="background-color: #FFC300;">Crear Componente Inicial</button>
+
+                </section>
+        </div>
+        
+        </main>
+    <script src="app.js"></script> 
+</body>
+</html>nentes (Último Cambio)</h3>
                     <div id="detail-components-list"></div>
                 </div>
 
