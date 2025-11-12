@@ -493,6 +493,16 @@
         cursor: not-allowed;
         transform: none;
       }
+
+      /* --- (NUEVO) Estilo para el botón de confirmación de borrado --- */
+      .btn-primary.btn-danger {
+        background: #e53e3e;
+        box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+      }
+      .btn-primary.btn-danger:hover {
+        background: #c53030;
+        box-shadow: 0 6px 16px rgba(197, 48, 48, 0.5);
+      }
       
       .btn-secondary {
         flex: 1;
@@ -826,18 +836,4 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px;
-        background: #f7fafc;
-        border-radius: 10px;
-        border-left: 4px solid #667eea;
-        transition: all 0.3s ease;
-      }
-      
-      .component-item:hover {
-        background: #edf2f7;
-        transform: translateX(5px);
-      }
-      
-      .component-name {
-        font-weight: 700;
         
