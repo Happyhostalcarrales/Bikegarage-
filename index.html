@@ -2348,6 +2348,31 @@
             showToast("❌ Error al actualizar el mantenimiento");
         }
     }
+    
+    // *** ¡FUNCIÓN AÑADIDA! ***
+    // Para mostrar el modal de editar mantenimiento
+    function showEditMaintenanceModal(maintenanceId) {
+      const maintenance = allData.find(d => d.id === maintenanceId);
+      if (!maintenance) {
+        showToast("❌ Error: No se encontró el mantenimiento.");
+        return;
+      }
+
+      // 1. Rellenar los campos del formulario
+      document.getElementById('edit-maintenance-id').value = maintenanceId;
+      document.getElementById('edit-maintenance-bike').value = maintenance.bike_name; // Asignar el nombre de la bici
+      document.getElementById('edit-maintenance-type').value = maintenance.maintenance_type;
+      document.getElementById('edit-maintenance-component').value = maintenance.component;
+      document.getElementById('edit-maintenance-date').value = maintenance.date;
+      document.getElementById('edit-maintenance-km').value = maintenance.km_at_maintenance || '';
+      document.getElementById('edit-maintenance-cost').value = maintenance.cost || 0;
+      document.getElementById('edit-next-maintenance-km').value = maintenance.next_maintenance_km || '';
+      document.getElementById('edit-maintenance-notes').value = maintenance.notes || '';
+
+      // 2. Mostrar el modal
+      document.getElementById('edit-maintenance-modal').style.display = 'flex';
+    }
+
 
     // Mostrar modal de edición de inventario
     function showEditStockModal(stockId) {
@@ -3160,7 +3185,8 @@
       };
     }
 
-    // NUEVO: Modal de confirmación para eliminar mantenimiento
+    // *** ¡FUNCIÓN AÑADIDA! ***
+    // Modal de confirmación para eliminar mantenimiento
     function showDeleteMaintenanceConfirmation(maintenanceId) {
       const maintenance = allData.find(d => d.id === maintenanceId);
       if (!maintenance) return;
