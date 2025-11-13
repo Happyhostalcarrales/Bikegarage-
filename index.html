@@ -840,4 +840,2359 @@
       
       .component-name {
         font-weight: 700;
+        color: #2d3748;
+        font-size: 15px;
+      }
+      
+      .component-info {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        font-size: 13px;
+        color: #718096;
+        font-weight: 600;
+      }
+      
+      .km-badge {
+        background: #667eea;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-weight: 700;
+      }
+      
+      .info-box {
+        background: #edf2f7;
+        border-left: 4px solid #4299e1;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      
+      .info-box p {
+        margin: 0;
+        color: #2d3748;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.6;
+      }
+      
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #2d3748;
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        animation: fadeIn 0.3s ease;
+        overflow-y: auto; /* Permitir scroll en modals grandes */
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        max-width: 650px; /* Ancho ajustado para la edición de componentes */
+        width: 90%;
+        animation: scaleIn 0.3s ease;
+        margin: 20px auto; /* Centrado con margen para el scroll */
+      }
+      
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      
+      .top-components {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+      
+      .top-components h3 {
+        margin: 0 0 20px 0;
+        color: #2d3748;
+        font-size: 20px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .top-component-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 12px;
+        background: #f7fafc;
+        border-radius: 10px;
+        margin-bottom: 10px;
+      }
+      
+      .rank-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 16px;
+      }
+      
+      .rank-badge.gold {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #2d3748;
+      }
+      
+      .rank-badge.silver {
+        background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+        color: #2d3748;
+      }
+      
+      .rank-badge.bronze {
+        background: linear-gradient(135deg, #cd7f32 0%, #e8a87c 100%);
+        color: white;
+      }
+      
+      .component-bar {
+        flex: 1;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      
+      .component-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 4px;
+        transition: width 0.5s ease;
+      }
+      
+      .stock-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+      }
+      
+      .stock-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+        border-radius: 16px;
+        padding: 25px;
+        transition: all 0.3s ease;
+        position: relative;
+        border: 3px solid #e2e8f0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+      }
+      
+      .stock-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        border-color: #667eea;
+      }
+      
+      .stock-card.low-stock {
+        border-color: #f6ad55;
+        background: linear-gradient(135deg, #fffaf0 0%, #fef5e7 100%);
+      }
+      
+      .stock-card.out-of-stock {
+        border-color: #fc8181;
+        background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+      }
+      
+      .stock-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 15px;
+      }
+      
+      .stock-icon {
+        font-size: 48px;
+        margin-bottom: 10px;
+      }
+      
+      .stock-name {
+        font-size: 20px;
+        font-weight: 800;
+        color: #2d3748;
+        margin-bottom: 5px;
+      }
+      
+      .stock-category {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .stock-brand {
+        font-size: 14px;
+        color: #718096;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+      
+      .stock-quantity-display {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+      }
+      
+      .stock-quantity-display.low {
+        background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+      }
+      
+      .stock-quantity-display.out {
+        background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+      }
+      
+      .quantity-controls {
+        display: flex;
+        gap: 8px;
+      }
+      
+      .quantity-btn {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+      
+      .quantity-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.1);
+      }
+      
+      .stock-details {
+        display: grid;
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 2px solid #e2e8f0;
+      }
+      
+      .stock-detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+      }
+      
+      .stock-detail-label {
+        color: #718096;
+        font-weight: 600;
+      }
+      
+      .stock-detail-value {
+        color: #2d3748;
+        font-weight: 800;
+      }
+      
+      .stock-notes-display {
+        font-size: 13px;
+        color: #4a5568;
+        margin-top: 12px;
+        padding: 10px;
+        background: white;
+        border-radius: 8px;
+        font-style: italic;
+        border-left: 3px solid #cbd5e0;
+        line-height: 1.5;
+      }
+      
+      .delete-stock {
+        background: #e53e3e;
+        color: white;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        font-weight: 700;
+      }
+      
+      .delete-stock:hover {
+        background: #c53030;
+        transform: scale(1.1);
+      }
+      
+      .stock-alert {
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      
+      .stock-alert.warning {
+        background: #fffaf0;
+        color: #c05621;
+        border: 2px solid #fbd38d;
+      }
+      
+      .stock-alert.danger {
+        background: #fee;
+        color: #c53030;
+        border: 2px solid #fc8181;
+      }
+    
+    /* ---------------------------------------------------------------------- */
+    /* ESTILOS DE AUTENTICACIÓN (LOGIN) */
+    /* ---------------------------------------------------------------------- */
+    #login-view {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .auth-card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .auth-card h2 {
+      font-size: 28px;
+      margin-bottom: 25px;
+      color: #2d3748;
+    }
+
+    .auth-card input {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .auth-card button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-auth-primary {
+      background: #667eea;
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .btn-auth-secondary {
+      background: #e2e8f0;
+      color: #2d3748;
+    }
+
+    .btn-auth-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-auth-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    .error-message {
+      color: #e53e3e;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .logout-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+        z-index: 50;
+    }
+
+    .logout-button:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /* ADAPTACIÓN A MÓVILES Y TABLETS (Media Queries) */
+    /* ---------------------------------------------------------------------- */
+
+    /* Pantallas medianas (Tablets en horizontal y vertical, ~768px a 1200px) */
+    @media (max-width: 1200px) {
+      .container {
+        padding: 15px; 
+      }
+      
+      .tabs {
+        padding: 8px; 
+      }
+      
+      .stat-card {
+        padding: 20px;
+      }
+      .stat-value {
+        font-size: 32px; 
+      }
+    }
+
+    /* Pantallas pequeñas (Móviles) */
+    @media (max-width: 768px) {
+      /* 1. LAYOUT PRINCIPAL */
+      .container {
+        padding: 10px; 
+      }
+      
+      .header h1 {
+        font-size: 32px; 
+      }
+      .content {
+        padding: 20px; 
+        border-radius: 12px;
+      }
+
+      /* 2. NAVEGACIÓN (TABS) */
+      .tabs {
+        flex-wrap: wrap; 
+        gap: 8px;
+        padding: 8px;
+      }
+      .tab {
+        flex-basis: 48%; 
+        min-width: unset;
+        font-size: 14px;
+        padding: 12px 10px;
+      }
+
+      /* 3. GRIDS: Apilar tarjetas */
+      .stats-grid {
+        grid-template-columns: 1fr 1fr; 
+      }
+      .bike-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+      }
+      .stock-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+      }
+
+      /* 4. FORMULARIOS */
+      .form-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+      }
+      .form-group.full-width {
+        grid-column: 1 / 1;
+      }
+      .form-actions {
+        flex-direction: column; 
+        gap: 10px;
+      }
+      .btn-primary, .btn-secondary {
+        padding: 14px;
+      }
+
+      /* 5. BARRA DE HERRAMIENTAS (Toolbar) */
+      .toolbar {
+        flex-direction: column; 
+        align-items: stretch;
+        padding: 10px;
+        gap: 10px;
+      }
+      .search-box {
+        width: 100%;
+      }
+      .filter-group {
+        flex-direction: column; 
+        align-items: flex-start;
+        width: 100%;
+      }
+      .filter-group select {
+        width: 100%;
+        min-width: unset;
+      }
+
+      /* 6. OTROS AJUSTES DE TARJETAS */
+      .bike-card, .stock-card {
+        padding: 20px;
+        border-radius: 12px;
+      }
+      .maintenance-item {
+        padding: 15px;
+        border-radius: 10px;
+      }
+      .maintenance-meta {
+        flex-direction: column; 
+        gap: 8px;
+      }
+
+      /* 7. AUTH Y MODAL */
+      .auth-card {
+          padding: 30px;
+      }
+      .modal-content {
+          padding: 20px;
+          max-width: 95%; /* Asegurar que quepa en pantalla pequeña */
+      }
+      .logout-button {
+          top: 10px;
+          right: 10px;
+          padding: 8px 12px;
+          font-size: 12px;
+      }
+    }
+  </style>
+
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+
+  <div id="edit-bike-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 800;">
+        🚴 Editar Bicicleta
+      </h3>
+      <form id="edit-bike-form">
+        <input type="hidden" id="edit-bike-id">
+        <div class="form-section">
+            <div class="form-grid">
+                <div class="form-group full-width"><label for="edit-bike-name">Nombre de la Bicicleta *</label> <input type="text" id="edit-bike-name" required placeholder="Ej: Mi MTB Roja"></div>
+                
+                <div class="form-group"><label for="edit-bike-type">Tipo de Bicicleta *</label> <select id="edit-bike-type" required> 
+                  <option value="Montaña">🏔️ Montaña (MTB)</option> 
+                  <option value="Carretera">🏁 Carretera</option> 
+                  <option value="Urbana">🏙️ Urbana</option> 
+                  <option value="Eléctrica">⚡ Eléctrica</option> 
+                  <option value="BMX">🎪 BMX</option> 
+                  <option value="Gravel">🌾 Gravel</option> 
+                  <option value="Híbrida">🔀 Híbrida</option> </select>
+                </div>
+                
+                <div class="form-group"><label for="edit-bike-color">Color *</label> <input type="text" id="edit-bike-color" required placeholder="Ej: Rojo"></div>
+                
+                <div class="form-group"><label for="edit-bike-km">Kilometraje Total (solo informativo)</label> <input type="number" id="edit-bike-km" disabled></div>
+
+            </div>
+        </div>
+
+        <div class="form-section" style="margin-top: 25px;">
+            <h4 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">⚙️ Componentes y Notas</h4>
+            <div id="components-list-edit" class="component-edit-list">
+                </div>
+            <button type="button" class="add-component-btn" onclick="addComponentInput()">+ Añadir Componente/Nota</button>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-primary" onclick="handleUpdateBike()">Guardar Cambios</button> 
+          <button type="button" class="btn-secondary" onclick="closeModal('edit-bike-modal')">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div id="edit-maintenance-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 800;">
+        🔧 Editar Mantenimiento
+      </h3>
+      <form id="edit-maintenance-form">
+        <input type="hidden" id="edit-maintenance-id">
+        <div class="form-grid">
+          
+          <div class="form-group"><label for="edit-maintenance-bike">Bicicleta</label> <input type="text" id="edit-maintenance-bike" disabled></div>
+
+          <div class="form-group"><label for="edit-maintenance-type">Tipo de Mantenimiento *</label> <select id="edit-maintenance-type" required> 
+            <option value="Cambio de componente">🔄 Cambio de componente</option>
+            <option value="Reparación">🔨 Reparación</option> 
+            <option value="Limpieza">🧼 Limpieza</option> 
+            <option value="Ajuste">⚙️ Ajuste</option> 
+            <option value="Revisión general">✅ Revisión general</option> 
+            <option value="Lubricación">💧 Lubricación</option> 
+          </select></div>
+
+          <div class="form-group"><label for="edit-maintenance-component">Componente *</label> <select id="edit-maintenance-component" required>
+            <optgroup label="Transmisión"> <option value="Cadena">⛓️ Cadena</option> <option value="Cassette">⚙️ Cassette</option> <option value="Platos">🔘 Platos</option> <option value="Bielas">🔧 Bielas</option> <option value="Cambio">🔄 Cambio</option> <option value="Desviador">↔️ Desviador</option> <option value="Cables">📏 Cables</option> <option value="Fundas">🔌 Fundas</option> </optgroup> 
+            <optgroup label="Ruedas y Neumáticos"> <option value="Cubierta delantera">🛞 Cubierta delantera</option> <option value="Cubierta trasera">🛞 Cubierta trasera</option> <option value="Cámara delantera">⭕ Cámara delantera</option> <option value="Cámara trasera">⭕ Cámara trasera</option> <option value="Llanta delantera">⚪ Llanta delantera</option> <option value="Llanta trasera">⚪ Llanta trasera</option> <option value="Radios">📍 Radios</option> </optgroup> 
+            <optgroup label="Frenos"> <option value="Frenos">🛑 Frenos</option> <option value="Pastillas de freno">🔲 Pastillas de freno</option> <option value="Discos de freno">💿 Discos de freno</option> <option value="Líquido de frenos">💧 Líquido de frenos</option> </optgroup> 
+            <optgroup label="Suspensión"> <option value="Horquilla">🍴 Horquilla</option> <option value="Amortiguador">🔩 Amortiguador</option> </optgroup> 
+            <optgroup label="Cockpit"> <option value="Manillar">🎯 Manillar</option> <option value="Potencia">📐 Potencia</option> <option value="Puños">✊ Puños</option> <option value="Cinta manillar">🎀 Cinta manillar</option> </optgroup> 
+            <optgroup label="Sillín"> <option value="Sillín">🪑 Sillín</option> <option value="Tija">📏 Tija</option> </optgroup> 
+            <optgroup label="Otros"> <option value="Pedales">👟 Pedales</option> <option value::"Pedalier">⚙️ Pedalier</option> <option value="Dirección">🧭 Dirección</option> <option value="Otro">❓ Otro</option> </optgroup>
+          </select></div>
+
+          <div class="form-group"><label for="edit-maintenance-date">Fecha *</label> <input type="date" id="edit-maintenance-date" required></div>
+          <div class="form-group"><label for="edit-maintenance-km">Kilometraje en el Mantenimiento</label> <input type="number" id="edit-maintenance-km" placeholder="Km actuales" min="0" step="0.1"></div>
+          <div class="form-group"><label for="edit-maintenance-cost">Coste (€)</label> <input type="number" id="edit-maintenance-cost" placeholder="0.00" min="0" step="0.01"></div>
+          <div class="form-group"><label for="edit-next-maintenance-km">Próximo Mantenimiento (Km)</label> <input type="number" id="edit-next-maintenance-km" placeholder="Ej: 500 km después" min="0" step="1"></div>
+          
+          <div class="form-group full-width"><label for="edit-maintenance-notes">Notas y Observaciones</label> <textarea id="edit-maintenance-notes" placeholder="Añade detalles sobre el mantenimiento..."></textarea></div>
+
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-primary" onclick="handleUpdateMaintenance()">Guardar Cambios</button> 
+          <button type="button" class="btn-secondary" onclick="closeModal('edit-maintenance-modal')">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="edit-stock-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 800;">
+        📦 Editar Material de Inventario
+      </h3>
+      <form id="edit-stock-form">
+        <input type="hidden" id="edit-stock-id">
+        <div class="form-grid">
+          
+          <div class="form-group">
+            <label for="edit-stock-name">Nombre del Material *</label>
+            <input type="text" id="edit-stock-name" required placeholder="Ej: Cadena KMC X11">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-stock-category">Categoría *</label>
+            <select id="edit-stock-category" required>
+              <option value="">Selecciona una categoría</option>
+              <option value="Transmisión">⛓️ Transmisión</option>
+              <option value="Frenos">🛑 Frenos</option>
+              <option value="Ruedas">🛞 Ruedas</option>
+              <option value="Suspensión">🔩 Suspensión</option>
+              <option value="Cockpit">🎯 Cockpit</option>
+              <option value="Sillín">🪑 Sillín</option>
+              <option value="Lubricantes">💧 Lubricantes</option>
+              <option value="Herramientas">🔧 Herramientas</option>
+              <option value="Accesorios">✨ Accesorios</option>
+              <option value="Otros">📦 Otros</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-stock-brand">Marca</label>
+            <input type="text" id="edit-stock-brand" placeholder="Ej: Shimano, SRAM, etc.">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-stock-quantity">Cantidad Actual *</label>
+            <input type="number" id="edit-stock-quantity" required placeholder="0" min="0" step="1">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-stock-min-quantity">Stock Mínimo *</label>
+            <input type="number" id="edit-stock-min-quantity" required placeholder="1" min="0" step="1">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-stock-unit-price">Precio Unitario (€)</label>
+            <input type="number" id="edit-stock-unit-price" placeholder="0.00" min="0" step="0.01">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-stock-location">Ubicación</label>
+            <input type="text" id="edit-stock-location" placeholder="Ej: Estante A, Cajón 3">
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="edit-stock-notes">Notas</label>
+            <textarea id="edit-stock-notes" placeholder="Información adicional sobre el material..."></textarea>
+          </div>
+
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-primary" onclick="handleUpdateStock()">Guardar Cambios</button>
+          <button type="button" class="btn-secondary" onclick="closeModal('edit-stock-modal')">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div id="login-view" style="display: none;">
+    <div class="auth-card">
+      <h2>Iniciar Sesión 🚴</h2>
+      <div id="auth-error" class="error-message" style="display: none;"></div>
+      <input type="email" id="auth-email" placeholder="Correo Electrónico" required>
+      <input type="password" id="auth-password" placeholder="Contraseña" required>
+      <button class="btn-auth-primary" onclick="handleLogin('login')">INICIAR SESIÓN</button>
+      <button class="btn-auth-secondary" onclick="handleLogin('register')">REGISTRARSE</button>
+      <p style="margin-top: 20px; font-size: 12px; color: #718096;">La aplicación es gratuita.</p>
+    </div>
+  </div>
+  
+  <div id="app-view" class="container" style="display: none;">
+    <button class="logout-button" onclick="handleLogout()">🚪 Cerrar Sesión</button>
+    <header class="header">
+      <h1 id="app-title">🚴 Mis Bicicletas</h1>
+      <p>Sistema profesional de gestión, mantenimiento e inventario</p>
+    </header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchTab('bikes')"> <span>🚴</span> Mis Bicicletas </button>
+      <button class="tab" onclick="switchTab('maintenance')"> <span>🔧</span> Mantenimientos </button>
+      <button class="tab" onclick="switchTab('stock')"> <span>📦</span> Inventario </button>
+      <button class="tab" onclick="switchTab('stats')"> <span>📊</span> Estadísticas </button>
+    </nav>
+    <main class="content">
+      <div id="bikes-view" class="view active">
+        <div class="action-bar"><button class="add-button" id="add-bike-btn" onclick="showAddBikeForm()"> <span>+</span> Nueva Bicicleta </button>
+        </div>
+        <div id="bike-form" style="display: none;">
+          <div class="form-section">
+            <h2>Registrar Nueva Bicicleta</h2>
+            <form id="new-bike-form" onsubmit="handleAddBike(event)">
+              <div class="form-grid">
+                <div class="form-group"><label for="bike-name">Nombre de la Bicicleta *</label> <input type="text" id="bike-name" required placeholder="Ej: Mi MTB Roja">
+                </div>
+                <div class="form-group"><label for="bike-type">Tipo de Bicicleta *</label> <select id="bike-type" required> <option value="">Selecciona un tipo</option> <option value="Montaña">🏔️ Montaña (MTB)</option> <option value="Carretera">🏁 Carretera</option> <option value="Urbana">🏙️ Urbana</option> <option value="Eléctrica">⚡ Eléctrica</option> <option value="BMX">🎪 BMX</option> <option value="Gravel">🌾 Gravel</option> <option value="Híbrida">🔀 Híbrida</option> </select>
+                </div>
+                <div class="form-group"><label for="bike-color">Color *</label> <input type="text" id="bike-color" required placeholder="Ej: Rojo">
+                </div>
+                <div class="form-group"><label for="bike-km">Kilometraje Actual *</label> <input type="number" id="bike-km" required placeholder="0" min="0" step="0.1">
+                </div>
+              </div>
+              <div class="form-actions"><button type="submit" class="btn-primary" id="save-bike-btn">Guardar Bicicleta</button> <button type="button" class="btn-secondary" onclick="hideAddBikeForm()">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="bikes-list" class="bike-grid"></div>
+      </div>
+      <div id="maintenance-view" class="view">
+        <div class="action-bar"><button class="add-button" id="add-maintenance-btn" onclick="showAddMaintenanceForm()"> <span>+</span> Nuevo Mantenimiento </button>
+        </div>
+        <div id="maintenance-form" style="display: none;">
+          <div class="form-section">
+            <h2>Registrar Mantenimiento</h2>
+            <div class="info-box">
+              <p>💡 <strong>Consejo:</strong> Registra el kilometraje actual para hacer seguimiento del desgaste de componentes y recibir alertas de mantenimiento preventivo.</p>
+            </div>
+            <form id="new-maintenance-form" onsubmit="handleAddMaintenance(event)">
+              <div class="form-grid">
+                <div class="form-group"><label for="maintenance-bike">Bicicleta *</label> <select id="maintenance-bike" required> <option value="">Selecciona una bicicleta</option> </select>
+                </div>
+                <div class="form-group"><label for="maintenance-type">Tipo de Mantenimiento *</label> <select id="maintenance-type" required> <option value="">Selecciona un tipo</option> <option value="Cambio de componente">🔄 Cambio de componente</option> <option value="Reparación">🔨 Reparación</option> <option value="Limpieza">🧼 Limpieza</option> <option value="Ajuste">⚙️ Ajuste</option> <option value="Revisión general">✅ Revisión general</option> <option value="Lubricación">💧 Lubricación</option> </select>
+                </div>
+                <div class="form-group"><label for="maintenance-component">Componente *</label> <select id="maintenance-component" required> <option value="">Selecciona un componente</option> <optgroup label="Transmisión"> <option value="Cadena">⛓️ Cadena</option> <option value="Cassette">⚙️ Cassette</option> <option value="Platos">🔘 Platos</option> <option value="Bielas">🔧 Bielas</option> <option value="Cambio">🔄 Cambio</option> <option value="Desviador">↔️ Desviador</option> <option value="Cables">📏 Cables</option> <option value="Fundas">🔌 Fundas</option> </optgroup> <optgroup label="Ruedas y Neumáticos"> <option value="Cubierta delantera">🛞 Cubierta delantera</option> <option value="Cubierta trasera">🛞 Cubierta trasera</option> <option value="Cámara delantera">⭕ Cámara delantera</option> <option value="Cámara trasera">⭕ Cámara trasera</option> <option value="Llanta delantera">⚪ Llanta delantera</option> <option value="Llanta trasera">⚪ Llanta trasera</option> <option value="Radios">📍 Radios</option> </optgroup> <optgroup label="Frenos"> <option value="Frenos">🛑 Frenos</option> <option value="Pastillas de freno">🔲 Pastillas de freno</option> <option value="Discos de freno">💿 Discos de freno</option> <option value="Líquido de frenos">💧 Líquido de frenos</option> </optgroup> <optgroup label="Suspensión"> <option value="Horquilla">🍴 Horquilla</option> <option value="Amortiguador">🔩 Amortiguador</option> </optgroup> <optgroup label="Cockpit"> <option value="Manillar">🎯 Manillar</option> <option value="Potencia">📐 Potencia</option> <option value="Puños">✊ Puños</option> <option value="Cinta manillar">🎀 Cinta manillar</option> </optgroup> <optgroup label="Sillín"> <option value="Sillín">🪑 Sillín</option> <option value="Tija">📏 Tija</option> </optgroup> <optgroup label="Otros"> <option value="Pedales">👟 Pedales</option> <option value="Pedalier">⚙️ Pedalier</option> <option value="Dirección">🧭 Dirección</option> <option value="Otro">❓ Otro</option> </optgroup> </select>
+                </div>
+                <div class="form-group"><label for="maintenance-date">Fecha *</label> <input type="date" id="maintenance-date" required>
+                </div>
+                <div class="form-group"><label for="maintenance-km">Kilometraje en el Mantenimiento</label> <input type="number" id="maintenance-km" placeholder="Km actuales" min="0" step="0.1">
+                </div>
+                <div class="form-group"><label for="maintenance-cost">Coste (<span id="currency-display">€</span>)</label> <input type="number" id="maintenance-cost" placeholder="0.00" min="0" step="0.01">
+                </div>
+                <div class="form-group"><label for="next-maintenance-km">Próximo Mantenimiento (Km)</label> <input type="number" id="next-maintenance-km" placeholder="Ej: 500 km después" min="0" step="1">
+                </div>
+                <div class="form-group full-width"><label for="maintenance-notes">Notas y Observaciones</label> <textarea id="maintenance-notes" placeholder="Añade detalles sobre el mantenimiento, marca del componente, problemas encontrados, etc."></textarea>
+                </div>
+              </div>
+              <div class="form-actions"><button type="submit" class="btn-primary" id="save-maintenance-btn">Guardar Mantenimiento</button> <button type="button" class="btn-secondary" onclick="hideAddMaintenanceForm()">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-box"><span class="search-icon">🔍</span> <input type="text" id="search-maintenance" placeholder="Buscar mantenimientos..." oninput="filterMaintenance()">
+          </div>
+          <div class="filter-group"><label for="filter-bike">Bicicleta:</label> <select id="filter-bike" onchange="filterMaintenance()"> <option value="">Todas</option> </select>
+          </div>
+          <div class="filter-group"><label for="filter-component">Componente:</label> <select id="filter-component" onchange="filterMaintenance()"> <option value="">Todos</option> </select>
+          </div>
+          <div class="filter-group"><label for="sort-maintenance">Ordenar:</label> <select id="sort-maintenance" onchange="filterMaintenance()"> <option value="date-desc">Fecha (más reciente)</option> <option value="date-asc">Fecha (más antiguo)</option> <option value="cost-desc">Coste (mayor)</option> <option value="cost-asc">Coste (menor)</option> <option value="km-desc">Kilometraje (mayor)</option> <option value="km-asc">Kilometraje (menor)</option> </select>
+          </div>
+        </div>
+        <div id="maintenance-list" class="maintenance-list"></div>
+      </div>
+      <div id="stock-view" class="view">
+        <div class="action-bar"><button class="add-button" onclick="showAddStockForm()"> <span>+</span> Añadir Material </button>
+        </div>
         
+        <div class="toolbar">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-stock" placeholder="Buscar material..." oninput="filterStock()">
+          </div>
+          <div class="filter-group">
+            <label for="filter-stock-category">Categoría:</label>
+            <select id="filter-stock-category" onchange="filterStock()">
+              <option value="">Todas</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-stock-status">Estado:</label>
+            <select id="filter-stock-status" onchange="filterStock()">
+              <option value="">Todos</option>
+              <option value="ok">✅ OK</option>
+              <option value="low">⚠️ Stock bajo</option>
+              <option value="out">🚨 Sin stock</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="stock-form" style="display: none;">
+          <div class="form-section">
+            <h2>Añadir Material al Inventario</h2>
+            <div class="info-box">
+              <p>📦 <strong>Gestiona tu stock:</strong> Mantén un control de tus componentes y materiales. Recibirás alertas cuando el stock esté bajo.</p>
+            </div>
+            <form id="new-stock-form" onsubmit="handleAddStock(event)">
+              <div class="form-grid">
+                <div class="form-group"><label for="stock-name">Nombre del Material *</label> <input type="text" id="stock-name" required placeholder="Ej: Cadena KMC X11">
+                </div>
+                <div class="form-group"><label for="stock-category">Categoría *</label> <select id="stock-category" required> <option value="">Selecciona una categoría</option> <option value="Transmisión">⛓️ Transmisión</option> <option value="Frenos">🛑 Frenos</option> <option value="Ruedas">🛞 Ruedas</option> <option value="Suspensión">🔩 Suspensión</option> <option value="Cockpit">🎯 Cockpit</option> <option value="Sillín">🪑 Sillín</option> <option value="Lubricantes">💧 Lubricantes</option> <option value="Herramientas">🔧 Herramientas</option> <option value="Accesorios">✨ Accesorios</option> <option value="Otros">📦 Otros</option> </select>
+                </div>
+                <div class="form-group"><label for="stock-brand">Marca</label> <input type="text" id="stock-brand" placeholder="Ej: Shimano, SRAM, etc.">
+                </div>
+                <div class="form-group"><label for="stock-quantity">Cantidad Actual *</label> <input type="number" id="stock-quantity" required placeholder="0" min="0" step="1">
+                </div>
+                <div class="form-group"><label for="stock-min-quantity">Stock Mínimo *</label> <input type="number" id="stock-min-quantity" required placeholder="1" min="0" step="1">
+                </div>
+                <div class="form-group"><label for="stock-unit-price">Precio Unitario (<span id="currency-display-stock">€</span>)</label> <input type="number" id="stock-unit-price" placeholder="0.00" min="0" step="0.01">
+                </div>
+                <div class="form-group"><label for="stock-location">Ubicación</label> <input type="text" id="stock-location" placeholder="Ej: Estante A, Cajón 3">
+                </div>
+                <div class="form-group full-width"><label for="stock-notes">Notas</label> <textarea id="stock-notes" placeholder="Información adicional sobre el material..."></textarea>
+                </div>
+              </div>
+              <div class="form-actions"><button type="submit" class="btn-primary" id="save-stock-btn">Guardar Material</button> <button type="button" class="btn-secondary" onclick="hideAddStockForm()">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="stock-list" class="stock-grid"></div>
+      </div>
+      <div id="stats-view" class="view">
+        <h2 style="margin-bottom: 25px; color: #2d3748; font-size: 28px; font-weight: 800;">📊 Estadísticas Generales</h2>
+        <div class="stats-grid" id="general-stats"></div>
+        <div id="top-components-section"></div>
+        <div id="bike-details-section"></div>
+      </div>
+    </main>
+  </div>
+  
+  <script>
+    // --- 1. FIREBASE CONFIGURACIÓN E INICIALIZACIÓN ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyA3D7fH6QpdG7mUSNhFfUzD6RWje8TpGEk",
+      authDomain: "hostaldatossincro.firebaseapp.com",
+      databaseURL: "https: //hostaldatossincro-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "hostaldatossincro",
+      storageBucket: "hostaldatossincro.firebasestorage.app",
+      messagingSenderId: "955112940193",
+      appId: "1:955112940193:web:f30f52858c1e6c0ddc46e0"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // VARIABLES GLOBALES
+    let allData = [];
+    let userId = null;
+    let dbRef = null; 
+    let unsubscribeFirestore = null; 
+    let currentMaintenanceId = null; 
+    let currentBikeId = null; 
+
+    // Componentes de bicicleta por defecto (para facilitar la carga inicial)
+    const DEFAULT_COMPONENTS = [
+        { name: "Horquilla", notes: "Marca, modelo, recorrido...", id: 'comp-' + Date.now() + 1 },
+        { name: "Amortiguador", notes: "Marca, modelo...", id: 'comp-' + Date.now() + 2 },
+        { name: "Ruedas", notes: "Marca, modelo, ancho...", id: 'comp-' + Date.now() + 3 },
+        { name: "Transmisión", notes: "Marca y número de velocidades/platos", id: 'comp-' + Date.now() + 4 },
+        { name: "Frenos", notes: "Marca, modelo, tipo de pastillas", id: 'comp-' + Date.now() + 5 },
+    ];
+
+
+    // --- 2. FUNCIONES DE AUTENTICACIÓN ---
+
+    function displayAuthError(message) {
+      const errorEl = document.getElementById('auth-error');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+      setTimeout(() => {
+        errorEl.style.display = 'none';
+      }, 5000);
+    }
+
+    async function handleLogin(action) {
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+      const errorEl = document.getElementById('auth-error');
+      errorEl.style.display = 'none';
+
+      if (!email || !password) {
+        displayAuthError("Por favor, introduce correo y contraseña.");
+        return;
+      }
+
+      try {
+        if (action === 'login') {
+          await auth.signInWithEmailAndPassword(email, password);
+          showToast("✅ Sesión iniciada correctamente");
+        } else if (action === 'register') {
+          await auth.createUserWithEmailAndPassword(email, password);
+          showToast("✅ Registro exitoso. ¡Bienvenido!");
+        }
+      } catch (error) {
+        let errorMessage = "Ocurrió un error de autenticación.";
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          errorMessage = "Correo o contraseña inválidos.";
+        } else if (error.code === 'auth/email-already-in-use') {
+          errorMessage = "El correo ya está en uso. Intenta iniciar sesión.";
+        } else if (error.code === 'auth/weak-password') {
+          errorMessage = "La contraseña debe tener al menos 6 caracteres.";
+        }
+        displayAuthError(errorMessage);
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        await auth.signOut();
+        showToast("🚪 Sesión cerrada.");
+      } catch (error) {
+        showToast("❌ Error al cerrar sesión.");
+      }
+    }
+
+    // Listener de estado de autenticación (Carga la app o muestra el login)
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // Usuario logueado: Ocultar Login, Mostrar App
+        document.getElementById('login-view').style.display = 'none';
+        document.getElementById('app-view').style.display = 'block';
+        userId = user.uid;
+        // La referencia a la base de datos es específica para el usuario
+        dbRef = db.collection('users').doc(userId).collection('appData');
+        listenToDataChanges(); // Iniciar la sincronización
+      } else {
+        // Usuario deslogueado: Mostrar Login, Ocultar App
+        document.getElementById('login-view').style.display = 'flex';
+        document.getElementById('app-view').style.display = 'none';
+        userId = null;
+        allData = []; 
+        if (unsubscribeFirestore) {
+          unsubscribeFirestore(); 
+          unsubscribeFirestore = null;
+        }
+        // Limpiar vistas
+        document.getElementById('bikes-list').innerHTML = '';
+        document.getElementById('maintenance-list').innerHTML = '';
+        document.getElementById('stock-list').innerHTML = '';
+        document.getElementById('general-stats').innerHTML = '';
+      }
+    });
+
+    // --- 3. FUNCIONES DE FIREBASE FIRESTORE PARA SINCRONIZACIÓN Y CRUD ---
+
+    function listenToDataChanges() {
+      if (unsubscribeFirestore) {
+        unsubscribeFirestore(); 
+      }
+      
+      // Sincronización en tiempo real
+      unsubscribeFirestore = dbRef.onSnapshot(snapshot => {
+        const changes = snapshot.docChanges();
+        let shouldRender = false;
+        
+        changes.forEach(change => {
+          const data = { id: change.doc.id, ...change.doc.data() };
+          
+          if (change.type === 'added') {
+            allData.push(data);
+            shouldRender = true;
+          } else if (change.type === 'modified') {
+            const index = allData.findIndex(d => d.id === data.id);
+            if (index !== -1) {
+              allData[index] = data;
+              shouldRender = true;
+            }
+          } else if (change.type === 'removed') {
+            allData = allData.filter(d => d.id !== data.id);
+            shouldRender = true;
+          }
+        });
+
+        if (shouldRender) {
+          onDataChanged(allData); 
+        }
+      }, err => {
+        console.error("Error al escuchar Firestore:", err);
+        showToast("❌ Error al sincronizar datos. Intenta recargar.");
+      });
+    }
+
+    // Manejador de cambios 
+    function onDataChanged(data) {
+      allData = data;
+      renderBikes();
+      renderMaintenance();
+      renderStock();
+      renderStats();
+      updateBikeSelectors();
+      updateComponentFilter();
+      updateStockCategoryFilter(); // Ahora esta función tiene sentido
+    }
+    
+    // Funciones CRUD usando Firestore
+
+    async function createData(data) {
+      try {
+        const docRef = dbRef.doc(); 
+        const newData = { ...data, id: docRef.id };
+        await docRef.set(newData);
+        return { isOk: true };
+      } catch (error) {
+        console.error("Error creando dato:", error);
+        return { isOk: false, error };
+      }
+    }
+
+    async function updateData(data) {
+      try {
+        await dbRef.doc(data.id).update(data);
+        return { isOk: true };
+      } catch (error) {
+        console.error("Error actualizando dato:", error);
+        return { isOk: false, error };
+      }
+    }
+
+    async function deleteData(data) {
+      try {
+        await dbRef.doc(data.id).delete();
+        return { isOk: true };
+      } catch (error) {
+        console.error("Error eliminando dato:", error);
+        return { isOk: false, error };
+      }
+    }
+
+
+    // --- 4. HANDLERS DE FORMULARIO DE CREACIÓN / EDICIÓN ---
+
+    async function handleAddBike(event) {
+      event.preventDefault();
+      
+      const saveBtn = document.getElementById('save-bike-btn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Guardando...';
+
+      const bikeData = {
+        type: 'bike',
+        bike_name: document.getElementById('bike-name').value,
+        bike_type: document.getElementById('bike-type').value,
+        bike_color: document.getElementById('bike-color').value,
+        total_km: parseFloat(document.getElementById('bike-km').value) || 0,
+        components: DEFAULT_COMPONENTS.map(c => ({...c, id: 'comp-' + Date.now() + Math.random()})), // Inicializar componentes
+        created_at: new Date().toISOString()
+      };
+
+      const result = await createData(bikeData);
+      
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Guardar Bicicleta';
+
+      if (result.isOk) {
+        hideAddBikeForm();
+        showToast("✅ Bicicleta registrada correctamente");
+      } else {
+        showToast("❌ Error al guardar la bicicleta");
+      }
+    }
+
+    // Mostrar modal de edición de bicicleta
+    function showEditBikeModal(bikeId) {
+        const bike = allData.find(d => d.id === bikeId);
+        if (!bike) return;
+
+        currentBikeId = bikeId;
+
+        // 1. Rellenar campos principales
+        document.getElementById('edit-bike-id').value = bikeId;
+        document.getElementById('edit-bike-name').value = bike.bike_name;
+        document.getElementById('edit-bike-type').value = bike.bike_type;
+        document.getElementById('edit-bike-color').value = bike.bike_color;
+        document.getElementById('edit-bike-km').value = bike.total_km;
+
+        // 2. Rellenar y renderizar componentes
+        renderComponentInputs(bike.components || DEFAULT_COMPONENTS);
+
+        // 3. Mostrar el modal
+        document.getElementById('edit-bike-modal').style.display = 'flex';
+    }
+
+    // Manejar la actualización de la bicicleta
+    async function handleUpdateBike() {
+        const bikeId = document.getElementById('edit-bike-id').value;
+        const bike = allData.find(d => d.id === bikeId);
+        if (!bike) return;
+
+        const saveBtn = document.querySelector('#edit-bike-modal .btn-primary');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Actualizando...';
+
+        // 1. Recoger los componentes editados
+        const componentsListElement = document.getElementById('components-list-edit');
+        const updatedComponents = [];
+
+        componentsListElement.querySelectorAll('.component-item-edit').forEach(item => {
+            const nameInput = item.querySelector('.component-name-input');
+            const notesInput = item.querySelector('.component-notes-input');
+            const componentId = item.getAttribute('data-id');
+
+            if (nameInput.value.trim()) {
+                updatedComponents.push({
+                    id: componentId,
+                    name: nameInput.value.trim(),
+                    notes: notesInput ? notesInput.value.trim() : ''
+                });
+            }
+        });
+
+
+        const updatedBikeData = {
+            // Campos que pueden cambiar
+            bike_name: document.getElementById('edit-bike-name').value,
+            bike_type: document.getElementById('edit-bike-type').value,
+            bike_color: document.getElementById('edit-bike-color').value,
+            // total_km se actualiza con el modal de km, aquí solo se guarda el resto:
+            components: updatedComponents, // Guardar la lista de componentes actualizada
+            // ID necesario para la función updateData
+            id: bikeId
+        };
+        
+        // Llamar a la función de actualización de Firestore
+        const result = await updateData(updatedBikeData);
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar Cambios';
+
+        if (result.isOk) {
+            closeModal('edit-bike-modal');
+            showToast("✅ Bicicleta actualizada correctamente");
+        } else {
+            showToast("❌ Error al actualizar la bicicleta");
+        }
+    }
+
+    // Renderizar los inputs de componentes en el modal de edición
+    function renderComponentInputs(components) {
+        const listContainer = document.getElementById('components-list-edit');
+        listContainer.innerHTML = ''; // Limpiar la lista
+
+        if (!components || components.length === 0) {
+            components = DEFAULT_COMPONENTS;
+        }
+
+        components.forEach(comp => {
+            const item = document.createElement('div');
+            item.className = 'component-item-edit';
+            item.setAttribute('data-id', comp.id);
+            item.innerHTML = `
+                <input type="text" class="component-name-input" placeholder="Nombre (Ej: Horquilla)" value="${comp.name}">
+                <input type="text" class="component-notes-input" placeholder="Notas (Ej: RockShox 150mm)" value="${comp.notes || ''}">
+                <button type="button" class="delete-component-btn" onclick="removeComponentInput(this)">X</button>
+            `;
+            listContainer.appendChild(item);
+        });
+    }
+
+    // Añadir un nuevo campo de componente al modal de edición
+    function addComponentInput() {
+        const listContainer = document.getElementById('components-list-edit');
+        const newItemId = 'comp-' + Date.now() + Math.random(); 
+        
+        const item = document.createElement('div');
+        item.className = 'component-item-edit';
+        item.setAttribute('data-id', newItemId);
+        item.innerHTML = `
+            <input type="text" class="component-name-input" placeholder="Nombre (Ej: Cadena)" value="">
+            <input type="text" class="component-notes-input" placeholder="Notas (Ej: KMC X11)" value="">
+            <button type="button" class="delete-component-btn" onclick="removeComponentInput(this)">X</button>
+        `;
+        listContainer.appendChild(item);
+    }
+
+    // Eliminar un campo de componente
+    function removeComponentInput(buttonElement) {
+        buttonElement.closest('.component-item-edit').remove();
+    }
+
+
+    // --- 6. HANDLERS CRUD RESTANTES (MANTENIMIENTO y STOCK) ---
+
+    async function handleAddMaintenance(event) {
+        event.preventDefault();
+        
+        const saveBtn = document.getElementById('save-maintenance-btn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Guardando...';
+
+        const bikeId = document.getElementById('maintenance-bike').value;
+        const bike = allData.find(d => d.id === bikeId);
+        if (!bike) {
+            showToast("⚠️ Bicicleta no encontrada.");
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar Mantenimiento';
+            return;
+        }
+        
+        const kmAtMaintenance = parseFloat(document.getElementById('maintenance-km').value) || null;
+        const nextMaintenanceKm = parseFloat(document.getElementById('next-maintenance-km').value) || null;
+
+        const maintenanceData = {
+            type: 'maintenance',
+            bike_id: bikeId,
+            bike_name: bike.bike_name,
+            maintenance_type: document.getElementById('maintenance-type').value,
+            component: document.getElementById('maintenance-component').value,
+            date: document.getElementById('maintenance-date').value,
+            km_at_maintenance: kmAtMaintenance,
+            cost: parseFloat(document.getElementById('maintenance-cost').value) || 0,
+            notes: document.getElementById('maintenance-notes').value,
+            next_maintenance_km: nextMaintenanceKm,
+            created_at: new Date().toISOString()
+        };
+
+        const result = await createData(maintenanceData);
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar Mantenimiento';
+
+        if (result.isOk) {
+            hideAddMaintenanceForm();
+            showToast("✅ Mantenimiento registrado correctamente");
+        } else {
+            showToast("❌ Error al guardar el mantenimiento");
+        }
+    }
+
+    async function handleAddStock(event) {
+        event.preventDefault();
+        
+        const saveBtn = document.getElementById('save-stock-btn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Guardando...';
+
+        const stockData = {
+            type: 'stock',
+            stock_name: document.getElementById('stock-name').value,
+            stock_category: document.getElementById('stock-category').value,
+            stock_brand: document.getElementById('stock-brand').value || '',
+            stock_quantity: parseInt(document.getElementById('stock-quantity').value) || 0,
+            stock_min_quantity: parseInt(document.getElementById('stock-min-quantity').value) || 1,
+            stock_unit_price: parseFloat(document.getElementById('stock-unit-price').value) || 0,
+            stock_location: document.getElementById('stock-location').value || '',
+            stock_notes: document.getElementById('stock-notes').value || '',
+            created_at: new Date().toISOString()
+        };
+
+        const result = await createData(stockData);
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar Material';
+
+        if (result.isOk) {
+            hideAddStockForm();
+            showToast("✅ Material añadido al inventario");
+        } else {
+            showToast("❌ Error al guardar el material");
+        }
+    }
+
+    async function deleteBike(bikeId) {
+      const bike = allData.find(d => d.id === bikeId);
+      if (!bike) return;
+
+      // Selecciona el botón de confirmar en el modal
+      const confirmBtn = document.getElementById('confirm-delete-btn');
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Eliminando...';
+      }
+
+      // Mostramos un toast de que estamos en proceso
+      showToast("♻️ Eliminando bicicleta...");
+
+      // Realizamos la operación de borrado
+      const result = await deleteData(bike);
+
+      // Cerramos el modal
+      closeModal('delete-bike-modal');
+
+      if (!result.isOk) {
+        // No es necesario reactivar el botón, el modal se ha cerrado
+        showToast("❌ Error al eliminar la bicicleta");
+      } else {
+        showToast("✅ Bicicleta eliminada");
+      }
+    }
+
+    async function deleteMaintenance(maintenanceId) {
+      const maintenance = allData.find(d => d.id === maintenanceId);
+      if (!maintenance) return;
+
+      const deleteBtn = event.target;
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = 'Eliminando...';
+
+      const result = await deleteData(maintenance);
+
+      if (!result.isOk) {
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = 'Eliminar';
+        showToast("❌ Error al eliminar el mantenimiento");
+      } else {
+        showToast("✅ Mantenimiento eliminado");
+      }
+    }
+
+    async function deleteStock(stockId) {
+      const stock = allData.find(d => d.id === stockId);
+      if (!stock) return;
+
+      const confirmBtn = document.getElementById('confirm-delete-stock-btn');
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Eliminando...';
+      }
+      
+      showToast("♻️ Eliminando material...");
+
+      const result = await deleteData(stock);
+
+      closeModal('delete-stock-modal');
+
+      if (!result.isOk) {
+        showToast("❌ Error al eliminar el material");
+      } else {
+        showToast("✅ Material eliminado del inventario");
+      }
+    }
+    
+    async function updateStockQuantity(stockId, change) {
+      const stock = allData.find(d => d.id === stockId);
+      if (!stock) return;
+
+      const newQuantity = Math.max(0, stock.stock_quantity + change);
+      const updatedStock = { ...stock, stock_quantity: newQuantity };
+
+      const result = await updateData(updatedStock);
+
+      if (!result.isOk) {
+        showToast("❌ Error al actualizar la cantidad");
+      }
+    }
+
+    async function updateBikeKm(bikeId) {
+      const bike = allData.find(d => d.id === bikeId);
+      if (!bike) return;
+
+      const newKm = parseFloat(document.getElementById('new-km').value);
+      
+      if (newKm < bike.total_km) {
+        showToast("⚠️ El nuevo kilometraje no puede ser menor al actual");
+        return;
+      }
+
+      const updatedBike = { ...bike, total_km: newKm };
+      const result = await updateData(updatedBike);
+
+      if (result.isOk) {
+        closeModal('km-modal'); 
+        showToast("✅ Kilometraje actualizado correctamente");
+      } else {
+        showToast("❌ Error al actualizar el kilometraje");
+      }
+    }
+
+
+    // Función ya existente para edición de mantenimientos (Llamada al presionar Guardar)
+    async function handleUpdateMaintenance() {
+        const maintenanceId = document.getElementById('edit-maintenance-id').value;
+        const maintenance = allData.find(d => d.id === maintenanceId);
+        if (!maintenance) return;
+
+        const saveBtn = document.querySelector('#edit-maintenance-modal .btn-primary');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Actualizando...';
+        
+        const kmAtMaintenance = parseFloat(document.getElementById('edit-maintenance-km').value) || null;
+        const nextMaintenanceKm = parseFloat(document.getElementById('edit-next-maintenance-km').value) || null;
+
+        const updatedData = {
+            maintenance_type: document.getElementById('edit-maintenance-type').value,
+            component: document.getElementById('edit-maintenance-component').value,
+            date: document.getElementById('edit-maintenance-date').value,
+            km_at_maintenance: kmAtMaintenance,
+            cost: parseFloat(document.getElementById('edit-maintenance-cost').value) || 0,
+            notes: document.getElementById('edit-maintenance-notes').value,
+            next_maintenance_km: nextMaintenanceKm,
+            id: maintenanceId
+        };
+        
+        const result = await updateData(updatedData);
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar Cambios';
+
+        if (result.isOk) {
+            closeModal('edit-maintenance-modal');
+            showToast("✅ Mantenimiento actualizado correctamente");
+        } else {
+            showToast("❌ Error al actualizar el mantenimiento");
+        }
+    }
+
+    // Mostrar modal de edición de inventario
+    function showEditStockModal(stockId) {
+      const stock = allData.find(d => d.id === stockId);
+      if (!stock) return;
+
+      // 1. Rellenar campos principales
+      document.getElementById('edit-stock-id').value = stockId;
+      document.getElementById('edit-stock-name').value = stock.stock_name;
+      document.getElementById('edit-stock-category').value = stock.stock_category;
+      document.getElementById('edit-stock-brand').value = stock.stock_brand || '';
+      document.getElementById('edit-stock-quantity').value = stock.stock_quantity;
+      document.getElementById('edit-stock-min-quantity').value = stock.stock_min_quantity;
+      document.getElementById('edit-stock-unit-price').value = stock.stock_unit_price || 0;
+      document.getElementById('edit-stock-location').value = stock.stock_location || '';
+      document.getElementById('edit-stock-notes').value = stock.stock_notes || '';
+
+      // 2. Mostrar el modal
+      document.getElementById('edit-stock-modal').style.display = 'flex';
+    }
+
+    // Manejar la actualización del inventario
+    async function handleUpdateStock() {
+      const stockId = document.getElementById('edit-stock-id').value;
+      const stock = allData.find(d => d.id === stockId);
+      if (!stock) return;
+
+      const saveBtn = document.querySelector('#edit-stock-modal .btn-primary');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Actualizando...';
+
+      const updatedStockData = {
+          stock_name: document.getElementById('edit-stock-name').value,
+          stock_category: document.getElementById('edit-stock-category').value,
+          stock_brand: document.getElementById('edit-stock-brand').value || '',
+          stock_quantity: parseInt(document.getElementById('edit-stock-quantity').value) || 0,
+          stock_min_quantity: parseInt(document.getElementById('edit-stock-min-quantity').value) || 1,
+          stock_unit_price: parseFloat(document.getElementById('edit-stock-unit-price').value) || 0,
+          stock_location: document.getElementById('edit-stock-location').value || '',
+          stock_notes: document.getElementById('edit-stock-notes').value || '',
+          id: stockId // ¡Importante!
+      };
+      
+      const result = await updateData(updatedStockData);
+
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Guardar Cambios';
+
+      if (result.isOk) {
+          closeModal('edit-stock-modal');
+          showToast("✅ Material actualizado correctamente");
+      } else {
+          showToast("❌ Error al actualizar el material");
+      }
+    }
+
+
+    // --- 7. FUNCIONES DE UI Y RENDERIZADO ---
+
+    const defaultConfig = {
+      app_title: "🚴 Mis Bicicletas",
+      add_bike_button: "Nueva Bicicleta",
+      add_maintenance_button: "Nuevo Mantenimiento",
+      currency_symbol: "€",
+      background_color: "#667eea",
+      surface_color: "#ffffff",
+      text_color: "#2d3748",
+      primary_action_color: "#667eea",
+      secondary_action_color: "#e53e3e"
+    };
+
+    function init() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('maintenance-date').value = today;
+    }
+    
+    function switchTab(tab) {
+      const tabs = document.querySelectorAll('.tab');
+      const views = document.querySelectorAll('.view');
+      
+      tabs.forEach(t => t.classList.remove('active'));
+      views.forEach(v => v.classList.remove('active'));
+      
+      event.target.closest('.tab').classList.add('active');
+      document.getElementById(`${tab}-view`).classList.add('active');
+      
+      if (tab === 'stats') {
+        renderStats();
+      } else if (tab === 'stock') {
+        renderStock();
+      }
+    }
+
+    function showAddBikeForm() {
+      document.getElementById('bike-form').style.display = 'block';
+      document.getElementById('bikes-list').style.display = 'none';
+    }
+
+    function hideAddBikeForm() {
+      document.getElementById('bike-form').style.display = 'none';
+      document.getElementById('bikes-list').style.display = 'grid';
+      document.getElementById('new-bike-form').reset();
+    }
+
+    function showAddMaintenanceForm() {
+      document.getElementById('maintenance-form').style.display = 'block';
+      document.getElementById('maintenance-list').style.display = 'none';
+      document.querySelector('#maintenance-view .toolbar').style.display = 'none';
+    }
+
+    function hideAddMaintenanceForm() {
+      document.getElementById('maintenance-form').style.display = 'none';
+      document.getElementById('maintenance-list').style.display = 'flex';
+      document.querySelector('#maintenance-view .toolbar').style.display = 'flex';
+      document.getElementById('new-maintenance-form').reset();
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('maintenance-date').value = today;
+    }
+
+    function showAddStockForm() {
+      document.getElementById('stock-form').style.display = 'block';
+      document.getElementById('stock-list').style.display = 'none';
+      // Corrección: Usar un selector específico para el toolbar de stock
+      const stockToolbar = document.querySelector('#stock-view .toolbar'); 
+      if (stockToolbar) stockToolbar.style.display = 'none';
+    }
+
+    function hideAddStockForm() {
+      document.getElementById('stock-form').style.display = 'none';
+      document.getElementById('stock-list').style.display = 'grid';
+      // Corrección: Usar un selector específico para el toolbar de stock
+      const stockToolbar = document.querySelector('#stock-view .toolbar');
+      if (stockToolbar) stockToolbar.style.display = 'flex';
+      document.getElementById('new-stock-form').reset();
+    }
+
+    function renderBikes() {
+      const bikesList = document.getElementById('bikes-list');
+      const bikes = allData.filter(d => d.type === 'bike');
+
+      if (bikes.length === 0) {
+        bikesList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🚴</div>
+            <h3>No hay bicicletas registradas</h3>
+            <p>Añade tu primera bicicleta para empezar a gestionar su mantenimiento profesionalmente</p>
+          </div>
+        `;
+        return;
+      }
+
+      bikesList.innerHTML = bikes.map(bike => {
+        const maintenance = allData.filter(d => d.type === 'maintenance' && d.bike_id === bike.id);
+        const maintenanceCount = maintenance.length;
+        const totalCost = maintenance.reduce((sum, m) => sum + (m.cost || 0), 0);
+        
+        const currencySymbol = defaultConfig.currency_symbol; 
+
+        const upcomingMaintenances = maintenance
+          .filter(m => m.next_maintenance_km && m.km_at_maintenance)
+          .map(m => ({
+            component: m.component,
+            targetKm: m.km_at_maintenance + m.next_maintenance_km,
+            kmLeft: (m.km_at_maintenance + m.next_maintenance_km) - bike.total_km
+          }))
+          .filter(m => m.kmLeft > 0)
+          .sort((a, b) => a.kmLeft - b.kmLeft);
+
+        const nextMaintenance = upcomingMaintenances[0];
+        
+        let alertClass = '';
+        let alertIcon = '';
+        let alertText = '';
+        
+        if (nextMaintenance) {
+          if (nextMaintenance.kmLeft < 50) {
+            alertClass = 'alert-critical';
+            alertIcon = '🚨';
+            alertText = `URGENTE: ${nextMaintenance.component} (${nextMaintenance.kmLeft.toFixed(0)} km)`;
+          } else if (nextMaintenance.kmLeft < 150) {
+            alertClass = 'alert-warning';
+            alertIcon = '⚠️';
+            alertText = `Próximo: ${nextMaintenance.component} (${nextMaintenance.kmLeft.toFixed(0)} km)`;
+          } else {
+            alertClass = 'alert-ok';
+            alertIcon = '✅';
+            alertText = `Todo OK - Próximo: ${nextMaintenance.component} (${nextMaintenance.kmLeft.toFixed(0)} km)`;
+          }
+        }
+
+        // Listado de componentes para mostrar
+        const componentsHtml = (bike.components || [])
+          .map(c => `<span style="display: block; font-size: 13px; color: #718096;">• ${c.name}: ${c.notes}</span>`).join('');
+
+
+        return `
+          <div class="bike-card">
+            <div class="bike-header">
+              <div>
+                <div class="bike-icon">🚴</div>
+                <div class="bike-name">${bike.bike_name}</div>
+                <div class="bike-type">${bike.bike_type} • ${bike.bike_color}</div>
+              </div>
+              <div style="display: flex; align-items: center;">
+                <button class="edit-bike-btn" onclick="showEditBikeModal('${bike.id}')" title="Editar detalles y componentes">✏️</button>
+                <button class="delete-bike" onclick="showDeleteBikeConfirmation('${bike.id}')" title="Eliminar bicicleta">×</button>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 15px; padding: 10px; background: #f7fafc; border-radius: 8px;">
+                <strong style="font-size: 13px; display: block; margin-bottom: 5px;">Componentes:</strong>
+                ${componentsHtml || '<span style="font-style: italic; font-size: 12px; color: #a0aec0;">No hay componentes añadidos.</span>'}
+            </div>
+            
+            <div class="bike-km-display">
+              <div class="km-value">
+                <span>📍</span>
+                <span>${bike.total_km.toFixed(1)} km</span>
+              </div>
+              <button class="edit-km-btn" onclick="showUpdateKmModal('${bike.id}')" title="Actualizar kilometraje">✏️</button>
+            </div>
+            ${nextMaintenance ? `<div class="alert-badge ${alertClass}">${alertIcon} ${alertText}</div>` : ''}
+            <div class="bike-stats">
+              <div class="bike-stat-item">
+                <div class="bike-stat-value">${maintenanceCount}</div>
+                <div class="bike-stat-label">Mantenimientos</div>
+              </div>
+              <div class="bike-stat-item">
+                <div class="bike-stat-value">${totalCost.toFixed(0)}${currencySymbol}</div>
+                <div class="bike-stat-label">Coste Total</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderMaintenance() {
+      const maintenanceList = document.getElementById('maintenance-list');
+      let maintenance = allData.filter(d => d.type === 'maintenance');
+
+      if (currentFilter) {
+        maintenance = maintenance.filter(m => m.bike_id === currentFilter);
+      }
+
+      if (currentComponentFilter) {
+        maintenance = maintenance.filter(m => m.component === currentComponentFilter);
+      }
+
+      if (currentSearch) {
+        const searchLower = currentSearch.toLowerCase();
+        maintenance = maintenance.filter(m => 
+          m.bike_name.toLowerCase().includes(searchLower) ||
+          m.component.toLowerCase().includes(searchLower) ||
+          m.maintenance_type.toLowerCase().includes(searchLower) ||
+          (m.notes && m.notes.toLowerCase().includes(searchLower))
+        );
+      }
+
+      maintenance.sort((a, b) => {
+        switch(currentSort) {
+          case 'date-desc':
+            return new Date(b.date) - new Date(a.date);
+          case 'date-asc':
+            return new Date(a.date) - new Date(b.date);
+          case 'cost-desc':
+            return (b.cost || 0) - (a.cost || 0);
+          case 'cost-asc':
+            return (a.cost || 0) - (b.cost || 0);
+          case 'km-desc':
+            return (b.km_at_maintenance || 0) - (a.km_at_maintenance || 0);
+          case 'km-asc':
+            return (a.km_at_maintenance || 0) - (b.km_at_maintenance || 0);
+          default:
+            return new Date(b.date) - new Date(a.date);
+        }
+      });
+
+      if (maintenance.length === 0) {
+        maintenanceList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🔧</div>
+            <h3>No hay mantenimientos registrados</h3>
+            <p>Registra el primer mantenimiento de tus bicicletas para hacer seguimiento profesional</p>
+          </div>
+        `;
+        return;
+      }
+
+      const currencySymbol = defaultConfig.currency_symbol;
+
+      maintenanceList.innerHTML = maintenance.map(m => {
+        const date = new Date(m.date);
+        const formattedDate = date.toLocaleDateString('es-ES', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+
+        return `
+          <div class="maintenance-item">
+            <div class="maintenance-header">
+              <div>
+                <div class="maintenance-title">${m.maintenance_type}</div>
+                <div class="maintenance-bike">🚴 ${m.bike_name}</div>
+              </div>
+              <div class="maintenance-actions">
+                  <button class="edit-maintenance" onclick="showEditMaintenanceModal('${m.id}')" title="Editar mantenimiento">✏️</button>
+                  <button class="delete-maintenance" onclick="deleteMaintenance('${m.id}')" title="Eliminar mantenimiento">×</button>
+              </div>
+            </div>
+            <div>
+              <span class="maintenance-component">${m.component}</span>
+              ${m.cost > 0 ? `<span class="maintenance-cost">${m.cost.toFixed(2)} ${currencySymbol}</span>` : ''}
+            </div>
+            <div class="maintenance-meta">
+              <div class="meta-item">📅 ${formattedDate}</div>
+              ${m.km_at_maintenance ? `<div class="meta-item">📍 ${m.km_at_maintenance.toFixed(1)} km</div>` : ''}
+              ${m.next_maintenance_km ? `<div class="meta-item">🔔 Próximo en ${m.next_maintenance_km} km</div>` : ''}
+            </div>
+            ${m.notes ? `<div class="maintenance-notes">💬 ${m.notes}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderStock() {
+      const stockList = document.getElementById('stock-list');
+      let stock = allData.filter(d => d.type === 'stock');
+
+      if (currentStockCategoryFilter) {
+        stock = stock.filter(s => s.stock_category === currentStockCategoryFilter);
+      }
+
+      if (currentStockStatusFilter) {
+        stock = stock.filter(s => {
+          if (currentStockStatusFilter === 'ok') return s.stock_quantity > s.stock_min_quantity;
+          if (currentStockStatusFilter === 'low') return s.stock_quantity > 0 && s.stock_quantity <= s.stock_min_quantity;
+          if (currentStockStatusFilter === 'out') return s.stock_quantity === 0;
+          return true;
+        });
+      }
+
+      if (currentStockSearch) {
+        const searchLower = currentStockSearch.toLowerCase();
+        stock = stock.filter(s => 
+          s.stock_name.toLowerCase().includes(searchLower) ||
+          s.stock_category.toLowerCase().includes(searchLower) ||
+          (s.stock_brand && s.stock_brand.toLowerCase().includes(searchLower)) ||
+          (s.stock_location && s.stock_location.toLowerCase().includes(searchLower))
+        );
+      }
+
+      if (stock.length === 0) {
+        stockList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📦</div>
+            <h3>No hay materiales en el inventario</h3>
+            <p>Añade componentes y materiales para gestionar tu stock</p>
+          </div>
+        `;
+        return;
+      }
+
+      const currencySymbol = defaultConfig.currency_symbol;
+
+      stockList.innerHTML = stock.map(s => {
+        const isLowStock = s.stock_quantity > 0 && s.stock_quantity <= s.stock_min_quantity;
+        const isOutOfStock = s.stock_quantity === 0;
+        
+        let cardClass = 'stock-card';
+        let quantityClass = 'stock-quantity-display';
+        let alertHTML = '';
+        
+        if (isOutOfStock) {
+          cardClass += ' out-of-stock';
+          quantityClass += ' out';
+          alertHTML = '<div class="stock-alert danger">🚨 SIN STOCK - Reponer urgentemente</div>';
+        } else if (isLowStock) {
+          cardClass += ' low-stock';
+          quantityClass += ' low';
+          alertHTML = '<div class="stock-alert warning">⚠️ STOCK BAJO - Considerar reposición</div>';
+        }
+
+        const categoryIcons = {
+          'Transmisión': '⛓️',
+          'Frenos': '🛑',
+          'Ruedas': '🛞',
+          'Suspensión': '🔩',
+          'Cockpit': '🎯',
+          'Sillín': '🪑',
+          'Lubricantes': '💧',
+          'Herramientas': '🔧',
+          'Accesorios': '✨',
+          'Otros': '📦'
+        };
+
+        const icon = categoryIcons[s.stock_category] || '📦';
+        const totalValue = s.stock_quantity * s.stock_unit_price;
+
+        return `
+          <div class="${cardClass}">
+            <div class="stock-header">
+              <div>
+                <div class="stock-icon">${icon}</div>
+                <div class="stock-name">${s.stock_name}</div>
+                <span class="stock-category">${s.stock_category}</span>
+                ${s.stock_brand ? `<div class="stock-brand">Marca: ${s.stock_brand}</div>` : ''}
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <button class="edit-bike-btn" onclick="showEditStockModal('${s.id}')" title="Editar material">✏️</button>
+                <button class="delete-stock" onclick="showDeleteStockConfirmation('${s.id}')" title="Eliminar material">×</button>
+              </div>
+            </div>
+            <div class="${quantityClass}">
+              <div>
+                <div style="font-size: 12px; opacity: 0.9;">CANTIDAD</div>
+                <div style="font-size: 24px;">${s.stock_quantity} uds</div>
+              </div>
+              <div class="quantity-controls">
+                <button class="quantity-btn" onclick="updateStockQuantity('${s.id}', -1)" title="Reducir cantidad">−</button>
+                <button class="quantity-btn" onclick="updateStockQuantity('${s.id}', 1)" title="Aumentar cantidad">+</button>
+              </div>
+            </div>
+            ${alertHTML}
+            <div class="stock-details">
+              <div class="stock-detail-item">
+                <span class="stock-detail-label">Stock Mínimo:</span>
+                <span class="stock-detail-value">${s.stock_min_quantity} uds</span>
+              </div>
+              ${s.stock_unit_price > 0 ? `
+                <div class="stock-detail-item">
+                  <span class="stock-detail-label">Precio Unitario:</span>
+                  <span class="stock-detail-value">${s.stock_unit_price.toFixed(2)} ${currencySymbol}</span>
+                </div>
+                <div class="stock-detail-item">
+                  <span class="stock-detail-label">Valor Total:</span>
+                  <span class="stock-detail-value">${totalValue.toFixed(2)} ${currencySymbol}</span>
+                </div>
+              ` : ''}
+              ${s.stock_location ? `
+                <div class="stock-detail-item">
+                  <span class="stock-detail-label">Ubicación:</span>
+                  <span class="stock-detail-value">${s.stock_location}</span>
+                </div>
+              ` : ''}
+            </div>
+            ${s.stock_notes ? `<div class="stock-notes-display">💬 ${s.stock_notes}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function renderStats() {
+      const bikes = allData.filter(d => d.type === 'bike');
+      const maintenance = allData.filter(d => d.type === 'maintenance');
+      const stock = allData.filter(d => d.type === 'stock');
+      
+      const totalKm = bikes.reduce((sum, b) => sum + (b.total_km || 0), 0);
+      const totalCost = maintenance.reduce((sum, m) => sum + (m.cost || 0), 0);
+      const avgCostPerBike = bikes.length > 0 ? totalCost / bikes.length : 0;
+      const costPerKm = totalKm > 0 ? totalCost / totalKm : 0;
+      const avgMaintenancePerBike = bikes.length > 0 ? maintenance.length / bikes.length : 0;
+      
+      const totalStockValue = stock.reduce((sum, s) => sum + (s.stock_quantity * s.stock_unit_price), 0);
+      const lowStockItems = stock.filter(s => s.stock_quantity > 0 && s.stock_quantity <= s.stock_min_quantity).length;
+      const outOfStockItems = stock.filter(s => s.stock_quantity === 0).length;
+      
+      const currencySymbol = defaultConfig.currency_symbol;
+
+      document.getElementById('general-stats').innerHTML = `
+        <div class="stat-card">
+          <span class="stat-card-icon">🚴</span>
+          <div class="stat-value">${bikes.length}</div>
+          <div class="stat-label">Bicicletas</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">🔧</span>
+          <div class="stat-value">${maintenance.length}</div>
+          <div class="stat-label">Mantenimientos</div>
+          <div class="stat-sublabel">${avgMaintenancePerBike.toFixed(1)} por bici</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">📍</span>
+          <div class="stat-value">${totalKm.toFixed(0)}</div>
+          <div class="stat-label">Km Totales</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">💰</span>
+          <div class="stat-value">${totalCost.toFixed(0)}${currencySymbol}</div>
+          <div class="stat-label">Coste Total</div>
+          <div class="stat-sublabel">${costPerKm.toFixed(2)}${currencySymbol}/km</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">📦</span>
+          <div class="stat-value">${stock.length}</div>
+          <div class="stat-label">Materiales</div>
+          <div class="stat-sublabel">${totalStockValue.toFixed(0)}${currencySymbol} en stock</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">⚠️</span>
+          <div class="stat-value">${lowStockItems + outOfStockItems}</div>
+          <div class="stat-label">Alertas Stock</div>
+          <div class="stat-sublabel">${outOfStockItems} sin stock</div>
+        </div>
+      `;
+
+      renderTopComponents(maintenance);
+      renderBikeDetails(bikes, maintenance, currencySymbol);
+    }
+
+    function renderTopComponents(maintenance) {
+      const componentCounts = {};
+      maintenance.forEach(m => {
+        componentCounts[m.component] = (componentCounts[m.component] || 0) + 1;
+      });
+
+      const topComponents = Object.entries(componentCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      if (topComponents.length === 0) {
+        document.getElementById('top-components-section').innerHTML = '';
+        return;
+      }
+
+      const maxCount = topComponents[0][1];
+
+      const topComponentsHTML = topComponents.map(([component, count], index) => {
+        const percentage = (count / maxCount) * 100;
+        let rankClass = '';
+        if (index === 0) rankClass = 'gold';
+        else if (index === 1) rankClass = 'silver';
+        else if (index === 2) rankClass = 'bronze';
+
+        return `
+          <div class="top-component-item">
+            <div class="rank-badge ${rankClass}">${index + 1}</div>
+            <div style="flex: 1;">
+              <div style="font-weight: 700; color: #2d3748; margin-bottom: 5px;">${component}</div>
+              <div class="component-bar">
+                <div class="component-bar-fill" style="width: ${percentage}%"></div>
+              </div>
+            </div>
+            <div style="font-weight: 800; color: #667eea; font-size: 18px;">${count}</div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('top-components-section').innerHTML = `
+        <div class="top-components">
+          <h3>🏆 Top 5 Componentes Más Cambiados</h3>
+          ${topComponentsHTML}
+        </div>
+      `;
+    }
+
+    function renderBikeDetails(bikes, maintenance, currencySymbol) {
+      const bikeDetailsSection = document.getElementById('bike-details-section');
+      
+      if (bikes.length === 0) {
+        bikeDetailsSection.innerHTML = '';
+        return;
+      }
+
+      bikeDetailsSection.innerHTML = bikes.map(bike => {
+        const bikeMaintenance = maintenance.filter(m => m.bike_id === bike.id);
+        const componentHistory = {};
+        
+        bikeMaintenance.forEach(m => {
+          if (!componentHistory[m.component]) {
+            componentHistory[m.component] = [];
+          }
+          componentHistory[m.component].push(m);
+        });
+
+        const componentList = Object.entries(componentHistory)
+          .map(([component, records]) => {
+            records.sort((a, b) => new Date(b.date) - new Date(a.date));
+            const lastMaintenance = records[0];
+            const count = records.length;
+            const totalCostComponent = records.reduce((sum, r) => sum + (r.cost || 0), 0);
+            
+            return `
+              <div class="component-item">
+                <div>
+                  <div class="component-name">${component}</div>
+                  <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+                    ${count} cambio${count > 1 ? 's' : ''} • Último: ${new Date(lastMaintenance.date).toLocaleDateString('es-ES')}
+                  </div>
+                </div>
+                <div class="component-info">
+                  ${lastMaintenance.km_at_maintenance ? `<span class="km-badge">${lastMaintenance.km_at_maintenance.toFixed(0)} km</span>` : ''}
+                  ${totalCostComponent > 0 ? `<span>${totalCostComponent.toFixed(2)} ${currencySymbol}</span>` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+
+        return `
+          <div class="component-history">
+            <h3>🚴 ${bike.bike_name} - Historial de Componentes</h3>
+            <div class="component-list">
+              ${componentList || '<p style="color: #718096; text-align: center;">No hay mantenimientos registrados para esta bicicleta</p>'}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateBikeSelectors() {
+      const bikes = allData.filter(d => d.type === 'bike');
+      const maintenanceBikeSelect = document.getElementById('maintenance-bike');
+      const filterBikeSelect = document.getElementById('filter-bike');
+
+      const bikeOptions = bikes.map(bike => 
+        `<option value="${bike.id}">${bike.bike_name} (${bike.total_km.toFixed(1)} km)</option>`
+      ).join('');
+
+      maintenanceBikeSelect.innerHTML = '<option value="">Selecciona una bicicleta</option>' + bikeOptions;
+      filterBikeSelect.innerHTML = '<option value="">Todas</option>' + bikeOptions;
+    }
+
+    function updateComponentFilter() {
+      const maintenance = allData.filter(d => d.type === 'maintenance');
+      const components = [...new Set(maintenance.map(m => m.component))].sort();
+      
+      const filterComponentSelect = document.getElementById('filter-component');
+      const componentOptions = components.map(comp => 
+        `<option value="${comp}">${comp}</option>`
+      ).join('');
+
+      filterComponentSelect.innerHTML = '<option value="">Todos</option>' + componentOptions;
+    }
+
+    function updateStockCategoryFilter() {
+      const stock = allData.filter(d => d.type === 'stock');
+      const categories = [...new Set(stock.map(s => s.stock_category))].sort();
+      
+      const filterCategorySelect = document.getElementById('filter-stock-category');
+      
+      // Asegurarse de que el selector existe antes de intentar modificarlo
+      if (filterCategorySelect) {
+        const categoryOptions = categories.map(cat => 
+          `<option value="${cat}">${cat}</option>`
+        ).join('');
+        filterCategorySelect.innerHTML = '<option value="">Todas</option>' + categoryOptions;
+      }
+    }
+
+    let currentFilter = "";
+    let currentComponentFilter = "";
+    let currentSearch = "";
+    let currentSort = "date-desc";
+    let currentStockCategoryFilter = "";
+    let currentStockStatusFilter = "";
+    let currentStockSearch = "";
+
+
+    function filterMaintenance() {
+      currentFilter = document.getElementById('filter-bike').value;
+      currentComponentFilter = document.getElementById('filter-component').value;
+      currentSearch = document.getElementById('search-maintenance').value;
+      currentSort = document.getElementById('sort-maintenance').value;
+      renderMaintenance();
+    }
+
+    function filterStock() {
+      // Asegurarse de que los elementos existen antes de leerlos
+      const categorySelect = document.getElementById('filter-stock-category');
+      const statusSelect = document.getElementById('filter-stock-status');
+      const searchInput = document.getElementById('search-stock');
+
+      currentStockCategoryFilter = categorySelect ? categorySelect.value : "";
+      currentStockStatusFilter = statusSelect ? statusSelect.value : "";
+      currentStockSearch = searchInput ? searchInput.value : "";
+      
+      renderStock();
+    }
+
+
+    function showUpdateKmModal(bikeId) {
+      const bike = allData.find(d => d.id === bikeId);
+      if (!bike) return;
+
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.id = 'km-modal'; // Añadir ID para closeModal
+      
+      const currencySymbol = defaultConfig.currency_symbol;
+
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 800;">
+            📍 Actualizar Kilometraje
+          </h3>
+          <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <p style="margin: 0 0 5px 0; color: #718096; font-size: 13px; font-weight: 600;">BICICLETA</p>
+            <p style="margin: 0; color: #2d3748; font-size: 16px; font-weight: 700;">${bike.bike_name}</p>
+            <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 14px;">
+              <strong>Kilometraje actual:</strong> ${bike.total_km.toFixed(1)} km
+            </p>
+          </div>
+          <div class="form-group">
+            <label for="new-km">Nuevo Kilometraje Total</label>
+            <input type="number" id="new-km" value="${bike.total_km}" min="${bike.total_km}" step="0.1" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 15px;">
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button onclick="updateBikeKm('${bikeId}')" class="btn-primary" style="flex: 1;">Actualizar</button>
+            <button onclick="closeModal('km-modal')" class="btn-secondary" style="flex: 1;">Cancelar</button>
+          </div>
+        </div>
+      `;
+      
+      modal.onclick = (e) => {
+        if (e.target === modal) closeModal('km-modal');
+      };
+      
+      document.body.appendChild(modal);
+    }
+
+    function showDeleteBikeConfirmation(bikeId) {
+      const bike = allData.find(d => d.id === bikeId);
+      if (!bike) return;
+
+      // Crear el overlay del modal
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.id = 'delete-bike-modal'; // ID único para este modal
+      
+      modal.innerHTML = `
+        <div class="modal-content" style="max-width: 450px;">
+          <h3 style="margin: 0 0 15px 0; color: #e53e3e; font-size: 22px; font-weight: 800;">
+            🚨 Confirmar Eliminación
+          </h3>
+          <p style="font-size: 16px; color: #2d3748; line-height: 1.6; margin-bottom: 25px;">
+            ¿Estás seguro de que quieres eliminar la bicicleta <strong>${bike.bike_name}</strong>?
+            <br>
+            <span style="font-weight: 700; color: #c53030; display: block; margin-top: 10px;">Esta acción no se puede deshacer.</span>
+          </p>
+          
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button id="confirm-delete-btn" class="btn-primary" style="flex: 1; background-color: #e53e3e; border-color: #e53e3e;">
+              Sí, Eliminar
+            </button>
+            <button onclick="closeModal('delete-bike-modal')" class="btn-secondary" style="flex: 1;">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Añadir evento para cerrar si se hace clic fuera del contenido
+      modal.onclick = (e) => {
+        if (e.target === modal) {
+          closeModal('delete-bike-modal');
+        }
+      };
+      
+      // Añadir el modal al body
+      document.body.appendChild(modal);
+
+      // Añadir el listener al botón de confirmar (lo hacemos así para poder deshabilitarlo)
+      document.getElementById('confirm-delete-btn').onclick = async () => {
+        await deleteBike(bikeId); // Llamamos a la función de borrado
+      };
+    }
+
+    // Modal de confirmación para eliminar inventario
+    function showDeleteStockConfirmation(stockId) {
+      const stock = allData.find(d => d.id === stockId);
+      if (!stock) return;
+
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.id = 'delete-stock-modal';
+      
+      modal.innerHTML = `
+        <div class="modal-content" style="max-width: 450px;">
+          <h3 style="margin: 0 0 15px 0; color: #e53e3e; font-size: 22px; font-weight: 800;">
+            🚨 Confirmar Eliminación
+          </h3>
+          <p style="font-size: 16px; color: #2d3748; line-height: 1.6; margin-bottom: 25px;">
+            ¿Estás seguro de que quieres eliminar <strong>${stock.stock_name}</strong> del inventario?
+            <br>
+            <span style="font-weight: 700; color: #c53030; display: block; margin-top: 10px;">Esta acción no se puede deshacer.</span>
+          </p>
+          
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button id="confirm-delete-stock-btn" class="btn-primary" style="flex: 1; background-color: #e53e3e; border-color: #e53e3e;">
+              Sí, Eliminar
+            </button>
+            <button onclick="closeModal('delete-stock-modal')" class="btn-secondary" style="flex: 1;">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      `;
+      
+      modal.onclick = (e) => {
+        if (e.target === modal) {
+          closeModal('delete-stock-modal');
+        }
+      };
+      
+      document.body.appendChild(modal);
+
+      document.getElementById('confirm-delete-stock-btn').onclick = async () => {
+        await deleteStock(stockId);
+      };
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        // Para evitar problemas en modals que se cierran desde dentro de otros
+        if (modal.parentElement) {
+          modal.parentElement.removeChild(modal);
+        }
+      }
+    }
+
+
+    function showToast(message) {
+      let toast = document.querySelector('.toast');
+      if (toast) toast.remove(); 
+
+      toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    // Manejar el cierre del modal de edición de bicicleta con la tecla ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+          if (document.getElementById('edit-maintenance-modal')) closeModal('edit-maintenance-modal');
+          if (document.getElementById('edit-bike-modal')) closeModal('edit-bike-modal');
+          if (document.getElementById('km-modal')) closeModal('km-modal');
+          if (document.getElementById('delete-bike-modal')) closeModal('delete-bike-modal');
+          
+          // NUEVOS MODALES DE STOCK
+          if (document.getElementById('edit-stock-modal')) closeModal('edit-stock-modal');
+          if (document.getElementById('delete-stock-modal')) closeModal('delete-stock-modal');
+      }
+    });
+
+    init();
+  </script>
+ </body>
+</html>
