@@ -1155,7 +1155,7 @@ function renderBikes() {
           <div class="bike-stats">
             <div class="bike-stat-item">
               <div class="bike-stat-value">${maintenanceCount}</div>
-              <div class="bike-stat-label">Mantenimientos</div>
+              <div class="stat-label">Mantenimientos</div>
             </div>
             <div class="bike-stat-item">
               <div class="bike-stat-value">${totalCost.toFixed(0)}${currencySymbol}</div>
