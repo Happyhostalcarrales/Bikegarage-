@@ -3,7 +3,7 @@
 // ¡¡¡ RECUERDA: Las claves de la API están diseñadas para ser públicas !!!
 // La seguridad se aplica en la consola de Firebase con las Reglas de Seguridad.
 const firebaseConfig = {
-  // Asegúrate de que tu databaseURL NO tenga espacios (ERROR COMÚN)
+  // CORREGIDO: databaseURL sin el espacio.
   apiKey: "AIzaSyA3D7fH6QpdG7mUSNhFfUzD6RWje8TpGEk",
   authDomain: "hostaldatossincro.firebaseapp.com",
   databaseURL: "https://hostaldatossincro-default-rtdb.europe-west1.firebasedatabase.app",
@@ -13,10 +13,17 @@ const firebaseConfig = {
   appId: "1:955112940193:web:f30f52858c1e6c0ddc46e0"
 };
 
-firebase.initializeApp(firebaseConfig);
+// Intenta inicializar Firebase, si falla, al menos el resto del JS no se detendrá bruscamente.
+try {
+    firebase.initializeApp(firebaseConfig);
+} catch (e) {
+    console.error("FIREBASE INITIALIZATION ERROR: ", e);
+    alert("Error de configuración. Revisa tus claves de Firebase.");
+}
+
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage(); // SDK de Storage inicializado
+const storage = firebase.storage(); 
     
 // VARIABLES GLOBALES
 let allData = [];
@@ -40,11 +47,13 @@ const DEFAULT_COMPONENTS = [
 
 function displayAuthError(message) {
   const errorEl = document.getElementById('auth-error');
-  errorEl.textContent = message;
-  errorEl.style.display = 'block';
-  setTimeout(() => {
-    errorEl.style.display = 'none';
-  }, 5000);
+  if (errorEl) { // Protección adicional
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+      setTimeout(() => {
+        errorEl.style.display = 'none';
+      }, 5000);
+  }
 }
 
 async function handleLogin(action) {
@@ -90,29 +99,33 @@ async function handleLogout() {
 
 // Listener de estado de autenticación (Carga la app o muestra el login)
 auth.onAuthStateChanged(user => {
+  const loginView = document.getElementById('login-view');
+  const appView = document.getElementById('app-view');
+
   if (user) {
     // Usuario logueado: Ocultar Login, Mostrar App
-    document.getElementById('login-view').style.display = 'none';
-    document.getElementById('app-view').style.display = 'block';
+    if (loginView) loginView.style.display = 'none';
+    if (appView) appView.style.display = 'block';
     userId = user.uid;
     // La referencia a la base de datos es específica para el usuario
     dbRef = db.collection('users').doc(userId).collection('appData');
     listenToDataChanges(); // Iniciar la sincronización
   } else {
     // Usuario deslogueado: Mostrar Login, Ocultar App
-    document.getElementById('login-view').style.display = 'flex';
-    document.getElementById('app-view').style.display = 'none';
+    if (loginView) loginView.style.display = 'flex';
+    if (appView) appView.style.display = 'none';
     userId = null;
     allData = []; 
     if (unsubscribeFirestore) {
       unsubscribeFirestore(); 
       unsubscribeFirestore = null;
     }
-    // Limpiar vistas
-    document.getElementById('bikes-list').innerHTML = '';
-    document.getElementById('maintenance-list').innerHTML = '';
-    document.getElementById('stock-list').innerHTML = '';
-    document.getElementById('general-stats').innerHTML = '';
+    // Limpiar vistas (si los elementos existen)
+    if (document.getElementById('bikes-list')) document.getElementById('bikes-list').innerHTML = '';
+    // ... y el resto de limpiezas de vistas
+    if (document.getElementById('maintenance-list')) document.getElementById('maintenance-list').innerHTML = '';
+    if (document.getElementById('stock-list')) document.getElementById('stock-list').innerHTML = '';
+    if (document.getElementById('general-stats')) document.getElementById('general-stats').innerHTML = '';
   }
 });
 
@@ -311,8 +324,6 @@ async function handleUpdateBike() {
             });
         }
     });
-
-    // NOTA: La lógica para SUBIR O BORRAR la imagen se añadiría aquí.
     
     const updatedBikeData = {
         // Campos que pueden cambiar
@@ -761,7 +772,7 @@ const defaultConfig = {
 
 function init() {
   const today = new Date().toISOString().split('T')[0];
-  document.getElementById('maintenance-date').value = today;
+  if (document.getElementById('maintenance-date')) document.getElementById('maintenance-date').value = today;
 }
 
 function switchTab(tab) {
@@ -771,8 +782,12 @@ function switchTab(tab) {
   tabs.forEach(t => t.classList.remove('active'));
   views.forEach(v => v.classList.remove('active'));
   
-  event.target.closest('.tab').classList.add('active');
-  document.getElementById(`${tab}-view`).classList.add('active');
+  // Usamos closest() para ser más robustos al hacer clic en el span/icono
+  const targetTab = event.target.closest('.tab');
+  if (targetTab) targetTab.classList.add('active');
+  
+  const targetView = document.getElementById(`${tab}-view`);
+  if (targetView) targetView.classList.add('active');
   
   if (tab === 'stats') {
     renderStats();
@@ -804,7 +819,7 @@ function hideAddMaintenanceForm() {
   document.querySelector('#maintenance-view .toolbar').style.display = 'flex';
   document.getElementById('new-maintenance-form').reset();
   const today = new Date().toISOString().split('T')[0];
-  document.getElementById('maintenance-date').value = today;
+  if (document.getElementById('maintenance-date')) document.getElementById('maintenance-date').value = today;
 }
 
 function showAddStockForm() {
@@ -1334,8 +1349,8 @@ function updateBikeSelectors() {
     `<option value="${bike.id}">${bike.bike_name} (${bike.total_km.toFixed(1)} km)</option>`
   ).join('');
 
-  maintenanceBikeSelect.innerHTML = '<option value="">Selecciona una bicicleta</option>' + bikeOptions;
-  filterBikeSelect.innerHTML = '<option value="">Todas</option>' + bikeOptions;
+  if (maintenanceBikeSelect) maintenanceBikeSelect.innerHTML = '<option value="">Selecciona una bicicleta</option>' + bikeOptions;
+  if (filterBikeSelect) filterBikeSelect.innerHTML = '<option value="">Todas</option>' + bikeOptions;
 }
 
 function updateComponentFilter() {
@@ -1347,7 +1362,7 @@ function updateComponentFilter() {
     `<option value="${comp}">${comp}</option>`
   ).join('');
 
-  filterComponentSelect.innerHTML = '<option value="">Todos</option>' + componentOptions;
+  if (filterComponentSelect) filterComponentSelect.innerHTML = '<option value="">Todos</option>' + componentOptions;
 }
 
 function updateStockCategoryFilter() {
@@ -1375,10 +1390,16 @@ let currentStockSearch = "";
 
 
 function filterMaintenance() {
-  currentFilter = document.getElementById('filter-bike').value;
-  currentComponentFilter = document.getElementById('filter-component').value;
-  currentSearch = document.getElementById('search-maintenance').value;
-  currentSort = document.getElementById('sort-maintenance').value;
+  const filterBike = document.getElementById('filter-bike');
+  const filterComponent = document.getElementById('filter-component');
+  const searchMaintenance = document.getElementById('search-maintenance');
+  const sortMaintenance = document.getElementById('sort-maintenance');
+  
+  currentFilter = filterBike ? filterBike.value : "";
+  currentComponentFilter = filterComponent ? filterComponent.value : "";
+  currentSearch = searchMaintenance ? searchMaintenance.value : "";
+  currentSort = sortMaintenance ? sortMaintenance.value : "date-desc";
+  
   renderMaintenance();
 }
 
