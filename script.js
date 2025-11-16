@@ -1,7 +1,6 @@
 // --- 1. FIREBASE CONFIGURACIÓN E INICIALIZACIÓN ---
     
 const firebaseConfig = {
-  // CORREGIDO: databaseURL sin el espacio.
   apiKey: "AIzaSyA3D7fH6QpdG7mUSNhFfUzD6RWje8TpGEk",
   authDomain: "hostaldatossincro.firebaseapp.com",
   databaseURL: "https://hostaldatossincro-default-rtdb.europe-west1.firebasedatabase.app",
@@ -16,8 +15,6 @@ try {
     firebase.initializeApp(firebaseConfig);
 } catch (e) {
     console.error("FIREBASE INITIALIZATION ERROR: ", e);
-    // Si la inicialización falla, el login no funcionará.
-    // Dejamos que continúe para que el auth.onAuthStateChanged muestre el login si puede.
 }
 
 const auth = firebase.auth();
@@ -40,6 +37,33 @@ const DEFAULT_COMPONENTS = [
     { name: "Transmisión", notes: "Marca y número de velocidades/platos", id: 'comp-' + Date.now() + 4 },
     { name: "Frenos", notes: "Marca, modelo, tipo de pastillas", id: 'comp-' + Date.now() + 5 },
 ];
+
+// --- FUNCIONES AUXILIARES DE IMAGEN ---
+
+/**
+ * Elimina un archivo de Firebase Storage usando su URL completa.
+ * @param {string} url - La URL de descarga del archivo.
+ * @returns {boolean} True si se eliminó correctamente o si la URL era nula/vacía.
+ */
+async function deleteImageFromStorage(url) {
+    if (!url) return true;
+    try {
+        // La referencia se obtiene desde la URL
+        const fileRef = storage.refFromURL(url);
+        await fileRef.delete();
+        console.log("Imagen eliminada de Storage:", url);
+        return true;
+    } catch (error) {
+        // Si el archivo no existe (404), tratamos como éxito para no bloquear el borrado de Firestore.
+        if (error.code_ === 'storage/object-not-found') {
+            console.warn("Archivo de Storage no encontrado, continuando con el borrado de Firestore.");
+            return true;
+        }
+        console.error("Error al eliminar la imagen de Storage:", error);
+        showToast("❌ Error al eliminar la imagen de Storage.");
+        return false;
+    }
+}
 
 
 // --- 2. FUNCIONES DE AUTENTICACIÓN ---
@@ -315,11 +339,12 @@ async function handleUpdateBike() {
 
     if (file) {
         saveBtn.textContent = 'Subiendo nueva imagen...';
+        // Usar la misma ruta para sobreescribir la imagen antigua (si existe) o crear una nueva
         const filePath = `uploads/${userId}/bikes/${Date.now()}_${file.name}`;
         const fileRef = storage.ref(filePath);
         
         try {
-            // Sube el nuevo archivo, esto reemplazará la imagen si la ruta es la misma.
+            // Sube el nuevo archivo.
             const snapshot = await fileRef.put(file);
             imageURL = await snapshot.ref.getDownloadURL();
             saveBtn.textContent = 'Guardando datos...';
@@ -352,12 +377,11 @@ async function handleUpdateBike() {
     });
     
     const updatedBikeData = {
-        // Campos que pueden cambiar
         bike_name: document.getElementById('edit-bike-name').value,
         bike_type: document.getElementById('edit-bike-type').value,
         bike_color: document.getElementById('edit-bike-color').value,
         components: updatedComponents, 
-        imageURL: imageURL, // <-- AHORA GUARDA LA NUEVA URL O LA ANTIGUA
+        imageURL: imageURL, // GUARDA LA NUEVA URL O LA ANTIGUA
         id: bikeId
     };
     
@@ -550,35 +574,41 @@ async function handleAddStock(event) {
     }
 }
 
+// BORRADO COMPLETO (Documento + Imagen de Storage)
 async function deleteBike(bikeId) {
   const bike = allData.find(d => d.id === bikeId);
   if (!bike) return;
 
-  // Selecciona el botón de confirmar en el modal
   const confirmBtn = document.getElementById('confirm-delete-btn');
   if (confirmBtn) {
     confirmBtn.disabled = true;
     confirmBtn.textContent = 'Eliminando...';
   }
 
-  // Mostramos un toast de que estamos en proceso
-  showToast("♻️ Eliminando bicicleta...");
+  showToast("♻️ Eliminando bicicleta y archivos...");
+  
+  // 1. Eliminar imagen de Storage (si existe)
+  if (bike.imageURL) {
+    const deletedImage = await deleteImageFromStorage(bike.imageURL);
+    if (!deletedImage) {
+        closeModal('delete-bike-modal');
+        return; // Detener si hay un error crítico en Storage
+    }
+  }
 
-  // Realizamos la operación de borrado
+  // 2. Eliminar documento de Firestore
   const result = await deleteData(bike);
 
-  // Cerramos el modal
   closeModal('delete-bike-modal');
 
   if (!result.isOk) {
-    // No es necesario reactivar el botón, el modal se ha cerrado
     showToast("❌ Error al eliminar la bicicleta");
   } else {
     showToast("✅ Bicicleta eliminada");
   }
 }
 
-// MODIFICADO: deleteMaintenance ahora funciona con el modal
+// BORRADO COMPLETO (Documento + Imagen de Storage)
 async function deleteMaintenance(maintenanceId) {
   const maintenance = allData.find(d => d.id === maintenanceId);
   if (!maintenance) return;
@@ -589,8 +619,18 @@ async function deleteMaintenance(maintenanceId) {
     confirmBtn.textContent = 'Eliminando...';
   }
   
-  showToast("♻️ Eliminando mantenimiento...");
+  showToast("♻️ Eliminando mantenimiento y archivos...");
 
+  // 1. Eliminar imagen de Storage (si existe)
+  if (maintenance.imageURL) {
+      const deletedImage = await deleteImageFromStorage(maintenance.imageURL);
+      if (!deletedImage) {
+          closeModal('delete-maintenance-modal');
+          return; 
+      }
+  }
+
+  // 2. Eliminar documento de Firestore
   const result = await deleteData(maintenance);
 
   closeModal('delete-maintenance-modal');
@@ -602,6 +642,7 @@ async function deleteMaintenance(maintenanceId) {
   }
 }
 
+// BORRADO COMPLETO (Documento + Imagen de Storage)
 async function deleteStock(stockId) {
   const stock = allData.find(d => d.id === stockId);
   if (!stock) return;
@@ -612,8 +653,18 @@ async function deleteStock(stockId) {
     confirmBtn.textContent = 'Eliminando...';
   }
   
-  showToast("♻️ Eliminando material...");
+  showToast("♻️ Eliminando material y archivos...");
 
+  // 1. Eliminar imagen de Storage (si existe)
+  if (stock.imageURL) {
+      const deletedImage = await deleteImageFromStorage(stock.imageURL);
+      if (!deletedImage) {
+          closeModal('delete-stock-modal');
+          return; 
+      }
+  }
+  
+  // 2. Eliminar documento de Firestore
   const result = await deleteData(stock);
 
   closeModal('delete-stock-modal');
@@ -950,7 +1001,7 @@ function renderBikes() {
           </div>
         </div>
         
-        <div id="details-${bike.id}" class="bike-details-hidden" style="display: none;">
+        <div id="details-${bike.id}" class="bike-details-hidden">
 
           <div style="margin-bottom: 15px; padding: 10px; background: #f7fafc; border-radius: 8px;">
               <strong style="font-size: 13px; display: block; margin-bottom: 5px;">Componentes:</strong>
