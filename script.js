@@ -320,7 +320,7 @@ function showEditBikeModal(bikeId) {
     if (colorInput) colorInput.value = bike.bike_color;
 
     const kmInput = document.getElementById('edit-bike-km');
-    if (kmInput) kmInput.value = bike.total_km || ''; 
+    if (kmInput) kmInput.value = bike.total_km || ''; // Aseguramos un valor seguro
     
     // El input de tipo file no se rellena por seguridad.
 
