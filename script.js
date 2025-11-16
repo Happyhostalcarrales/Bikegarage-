@@ -309,7 +309,7 @@ function showEditBikeModal(bikeId) {
     // 1. Rellenar campos principales (protegidos contra null con checks)
     document.getElementById('edit-bike-id').value = bikeId;
     
-    // Asignación con protección
+    // Asignación con protección (blindado contra TypeError)
     const nameInput = document.getElementById('edit-bike-name');
     if (nameInput) nameInput.value = bike.bike_name;
 
@@ -322,7 +322,7 @@ function showEditBikeModal(bikeId) {
     const kmInput = document.getElementById('edit-bike-km');
     if (kmInput) kmInput.value = bike.total_km || ''; // LÍNEA CRÍTICA PROTEGIDA
     
-    // 2. Lógica para mostrar opción de eliminar la imagen existente
+    // 2. Lógica para mostrar opción de eliminar la imagen existente (SOLUCIÓN AL ERROR DE LÍNEA 831)
     const imageInfo = document.getElementById('edit-bike-image-info');
     if (imageInfo) { // <--- PROTECCIÓN CRÍTICA AÑADIDA
       if (bike.imageURL) {
@@ -340,7 +340,7 @@ function showEditBikeModal(bikeId) {
     document.getElementById('edit-bike-modal').style.display = 'flex';
 }
 
-// Manejar la actualización de la bicicleta (AHORA incluye la lógica de imagen)
+// Manejar la actualización de la bicicleta (AHORA incluye la lógica de imagen y borrado)
 async function handleUpdateBike() {
     
     const bikeId = document.getElementById('edit-bike-id').value;
@@ -844,7 +844,7 @@ function showEditBikeModal(bikeId) {
     const kmInput = document.getElementById('edit-bike-km');
     if (kmInput) kmInput.value = bike.total_km || ''; // LÍNEA CRÍTICA PROTEGIDA
     
-    // 2. Lógica para mostrar opción de eliminar la imagen existente
+    // 2. Lógica para mostrar opción de eliminar la imagen existente (SOLUCIÓN AL ERROR DE LÍNEA 831)
     const imageInfo = document.getElementById('edit-bike-image-info');
     if (imageInfo) { // <--- PROTECCIÓN CRÍTICA AÑADIDA
       if (bike.imageURL) {
@@ -852,6 +852,7 @@ function showEditBikeModal(bikeId) {
       } else {
         imageInfo.innerHTML = `<p style="margin-top: 10px;">❌ No hay imagen adjunta.</p>`;
       }
+      document.getElementById('edit-bike-image').value = ''; // Limpiar el input file
     }
 
 
@@ -876,14 +877,23 @@ function showEditStockModal(stockId) {
   document.getElementById('edit-stock-unit-price').value = stock.stock_unit_price || 0;
   document.getElementById('edit-stock-location').value = stock.stock_location || '';
   document.getElementById('edit-stock-notes').value = stock.stock_notes || '';
-  // NO rellenamos el input file.
+  
+  // Lógica para mostrar opción de eliminar la imagen existente
+  const imageInfo = document.getElementById('edit-stock-image-info');
+  if (imageInfo) {
+    if (stock.imageURL) {
+        imageInfo.innerHTML = `<p style="margin-top: 10px;">✅ Imagen actual adjunta. <label><input type="checkbox" id="delete-current-stock-image"> Eliminar imagen actual</label></p>`;
+    } else {
+        imageInfo.innerHTML = `<p style="margin-top: 10px;">❌ No hay imagen adjunta.</p>`;
+    }
+    document.getElementById('edit-stock-image').value = ''; // Limpiar el input file
+  }
 
   // 2. Mostrar el modal
   document.getElementById('edit-stock-modal').style.display = 'flex';
 }
 
 async function handleUpdateStock() {
-    // (La lógica para actualizar la imagen aún no está implementada)
     
     const stockId = document.getElementById('edit-stock-id').value;
     const stock = allData.find(d => d.id === stockId);
@@ -893,7 +903,44 @@ async function handleUpdateStock() {
     saveBtn.disabled = true;
     saveBtn.textContent = 'Actualizando...';
     
-    // NOTA: La lógica para SUBIR O BORRAR la imagen se añadiría aquí.
+    // Lógica para subida/actualización de imagen (¡NUEVO!)
+    const fileInput = document.getElementById('edit-stock-image');
+    const file = fileInput.files[0];
+    const deleteCheckbox = document.getElementById('delete-current-stock-image');
+
+    let imageURL = stock.imageURL; // Mantener la URL antigua por defecto
+
+    // 1. PROCESAR BORRADO (Si la casilla está marcada)
+    if (deleteCheckbox && deleteCheckbox.checked && stock.imageURL) {
+        saveBtn.textContent = 'Eliminando imagen antigua...';
+        const deleted = await deleteImageFromStorage(stock.imageURL);
+        if (deleted) {
+            imageURL = null; // Borramos la URL de Firestore
+        } else {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Error al borrar imagen';
+            return;
+        }
+    }
+
+    // 2. PROCESAR NUEVA SUBIDA
+    if (file) {
+        saveBtn.textContent = 'Subiendo nueva imagen...';
+        const filePath = `uploads/${userId}/stock/${Date.now()}_${file.name}`;
+        const fileRef = storage.ref(filePath);
+        
+        try {
+            const snapshot = await fileRef.put(file);
+            imageURL = await snapshot.ref.getDownloadURL();
+            saveBtn.textContent = 'Guardando datos...';
+        } catch (error) {
+            console.error("Error al subir imagen:", error);
+            showToast("❌ Error al subir la imagen nueva.");
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar Cambios';
+            return; 
+        }
+    }
 
     const updatedStockData = {
         stock_name: document.getElementById('edit-stock-name').value,
@@ -904,6 +951,7 @@ async function handleUpdateStock() {
         stock_unit_price: parseFloat(document.getElementById('edit-stock-unit-price').value) || 0,
         stock_location: document.getElementById('edit-stock-location').value || '',
         stock_notes: document.getElementById('edit-stock-notes').value || '',
+        imageURL: imageURL, // ¡ACTUALIZADO!
         id: stockId 
     };
     
@@ -1029,7 +1077,6 @@ function renderBikes() {
     const maintenance = allData.filter(d => d.type === 'maintenance' && d.bike_id === bike.id);
     const maintenanceCount = maintenance.length;
     const totalCost = maintenance.reduce((sum, m) => sum + (m.cost || 0), 0);
-    
     const currencySymbol = defaultConfig.currency_symbol; 
 
     const upcomingMaintenances = maintenance
