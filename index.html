@@ -1534,76 +1534,6 @@
     </div>
   </div>
 
-  <div id="edit-stock-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-      <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 800;">
-        📦 Editar Material de Inventario
-      </h3>
-      <form id="edit-stock-form">
-        <input type="hidden" id="edit-stock-id">
-        <div class="form-grid">
-          
-          <div class="form-group">
-            <label for="edit-stock-name">Nombre del Material *</label>
-            <input type="text" id="edit-stock-name" required placeholder="Ej: Cadena KMC X11">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-stock-category">Categoría *</label>
-            <select id="edit-stock-category" required>
-              <option value="">Selecciona una categoría</option>
-              <option value="Transmisión">⛓️ Transmisión</option>
-              <option value="Frenos">🛑 Frenos</option>
-              <option value="Ruedas">🛞 Ruedas</option>
-              <option value="Suspensión">🔩 Suspensión</option>
-              <option value="Cockpit">🎯 Cockpit</option>
-              <option value="Sillín">🪑 Sillín</option>
-              <option value="Lubricantes">💧 Lubricantes</option>
-              <option value="Herramientas">🔧 Herramientas</option>
-              <option value="Accesorios">✨ Accesorios</option>
-              <option value="Otros">📦 Otros</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-stock-brand">Marca</label>
-            <input type="text" id="edit-stock-brand" placeholder="Ej: Shimano, SRAM, etc.">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-stock-quantity">Cantidad Actual *</label>
-            <input type="number" id="edit-stock-quantity" required placeholder="0" min="0" step="1">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-stock-min-quantity">Stock Mínimo *</label>
-            <input type="number" id="edit-stock-min-quantity" required placeholder="1" min="0" step="1">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-stock-unit-price">Precio Unitario (€)</label>
-            <input type="number" id="edit-stock-unit-price" placeholder="0.00" min="0" step="0.01">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-stock-location">Ubicación</label>
-            <input type="text" id="edit-stock-location" placeholder="Ej: Estante A, Cajón 3">
-          </div>
-          
-          <div class="form-group full-width">
-            <label for="edit-stock-notes">Notas</label>
-            <textarea id="edit-stock-notes" placeholder="Información adicional sobre el material..."></textarea>
-          </div>
-
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn-primary" onclick="handleUpdateStock()">Guardar Cambios</button>
-          <button type="button" class="btn-secondary" onclick="closeModal('edit-stock-modal')">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
 
   <div id="login-view" style="display: none;">
     <div class="auth-card">
@@ -1702,29 +1632,6 @@
       <div id="stock-view" class="view">
         <div class="action-bar"><button class="add-button" onclick="showAddStockForm()"> <span>+</span> Añadir Material </button>
         </div>
-        
-        <div class="toolbar">
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="search-stock" placeholder="Buscar material..." oninput="filterStock()">
-          </div>
-          <div class="filter-group">
-            <label for="filter-stock-category">Categoría:</label>
-            <select id="filter-stock-category" onchange="filterStock()">
-              <option value="">Todas</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="filter-stock-status">Estado:</label>
-            <select id="filter-stock-status" onchange="filterStock()">
-              <option value="">Todos</option>
-              <option value="ok">✅ OK</option>
-              <option value="low">⚠️ Stock bajo</option>
-              <option value="out">🚨 Sin stock</option>
-            </select>
-          </div>
-        </div>
-
         <div id="stock-form" style="display: none;">
           <div class="form-section">
             <h2>Añadir Material al Inventario</h2>
@@ -1768,8 +1675,6 @@
   
   <script>
     // --- 1. FIREBASE CONFIGURACIÓN E INICIALIZACIÓN ---
-    
-    // ¡¡¡ CORRECCIÓN CRÍTICA: Eliminado el espacio en databaseURL !!!
     const firebaseConfig = {
       apiKey: "AIzaSyA3D7fH6QpdG7mUSNhFfUzD6RWje8TpGEk",
       authDomain: "hostaldatossincro.firebaseapp.com",
@@ -1790,7 +1695,7 @@
     let dbRef = null; 
     let unsubscribeFirestore = null; 
     let currentMaintenanceId = null; 
-    let currentBikeId = null; 
+    let currentBikeId = null; // NUEVO: Para edición de bicicleta
 
     // Componentes de bicicleta por defecto (para facilitar la carga inicial)
     const DEFAULT_COMPONENTS = [
@@ -1930,7 +1835,7 @@
       renderStats();
       updateBikeSelectors();
       updateComponentFilter();
-      updateStockCategoryFilter(); // Ahora esta función tiene sentido
+      updateStockCategoryFilter();
     }
     
     // Funciones CRUD usando Firestore
@@ -2000,7 +1905,7 @@
       }
     }
 
-    // Mostrar modal de edición de bicicleta
+    // NUEVO: Mostrar modal de edición de bicicleta
     function showEditBikeModal(bikeId) {
         const bike = allData.find(d => d.id === bikeId);
         if (!bike) return;
@@ -2021,7 +1926,7 @@
         document.getElementById('edit-bike-modal').style.display = 'flex';
     }
 
-    // Manejar la actualización de la bicicleta
+    // NUEVO: Manejar la actualización de la bicicleta
     async function handleUpdateBike() {
         const bikeId = document.getElementById('edit-bike-id').value;
         const bike = allData.find(d => d.id === bikeId);
@@ -2075,7 +1980,7 @@
         }
     }
 
-    // Renderizar los inputs de componentes en el modal de edición
+    // NUEVO: Renderizar los inputs de componentes en el modal de edición
     function renderComponentInputs(components) {
         const listContainer = document.getElementById('components-list-edit');
         listContainer.innerHTML = ''; // Limpiar la lista
@@ -2097,7 +2002,7 @@
         });
     }
 
-    // Añadir un nuevo campo de componente al modal de edición
+    // NUEVO: Añadir un nuevo campo de componente al modal de edición
     function addComponentInput() {
         const listContainer = document.getElementById('components-list-edit');
         const newItemId = 'comp-' + Date.now() + Math.random(); 
@@ -2113,13 +2018,17 @@
         listContainer.appendChild(item);
     }
 
-    // Eliminar un campo de componente
+    // NUEVO: Eliminar un campo de componente
     function removeComponentInput(buttonElement) {
         buttonElement.closest('.component-item-edit').remove();
     }
 
 
     // --- 6. HANDLERS CRUD RESTANTES (MANTENIMIENTO y STOCK) ---
+
+    // (Las funciones handleAddMaintenance, handleAddStock, deleteBike, deleteMaintenance, deleteStock,
+    // updateStockQuantity y updateBikeKm se mantienen como en la última versión, usando updateData/deleteData)
+    // El código se mantiene sin cambios para no alargar demasiado, asumiendo que ya funcionan.
 
     async function handleAddMaintenance(event) {
         event.preventDefault();
@@ -2228,24 +2137,19 @@
       }
     }
 
-    // MODIFICADO: deleteMaintenance ahora funciona con el modal
     async function deleteMaintenance(maintenanceId) {
       const maintenance = allData.find(d => d.id === maintenanceId);
       if (!maintenance) return;
 
-      const confirmBtn = document.getElementById('confirm-delete-maintenance-btn');
-      if (confirmBtn) {
-        confirmBtn.disabled = true;
-        confirmBtn.textContent = 'Eliminando...';
-      }
-      
-      showToast("♻️ Eliminando mantenimiento...");
+      const deleteBtn = event.target;
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = 'Eliminando...';
 
       const result = await deleteData(maintenance);
 
-      closeModal('delete-maintenance-modal');
-
       if (!result.isOk) {
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = 'Eliminar';
         showToast("❌ Error al eliminar el mantenimiento");
       } else {
         showToast("✅ Mantenimiento eliminado");
@@ -2256,19 +2160,15 @@
       const stock = allData.find(d => d.id === stockId);
       if (!stock) return;
 
-      const confirmBtn = document.getElementById('confirm-delete-stock-btn');
-      if (confirmBtn) {
-        confirmBtn.disabled = true;
-        confirmBtn.textContent = 'Eliminando...';
-      }
-      
-      showToast("♻️ Eliminando material...");
+      const deleteBtn = event.target;
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = '...';
 
       const result = await deleteData(stock);
 
-      closeModal('delete-stock-modal');
-
       if (!result.isOk) {
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = '×';
         showToast("❌ Error al eliminar el material");
       } else {
         showToast("✅ Material eliminado del inventario");
@@ -2348,86 +2248,6 @@
             showToast("❌ Error al actualizar el mantenimiento");
         }
     }
-    
-    // *** ¡FUNCIÓN AÑADIDA! ***
-    // Para mostrar el modal de editar mantenimiento
-    function showEditMaintenanceModal(maintenanceId) {
-      const maintenance = allData.find(d => d.id === maintenanceId);
-      if (!maintenance) {
-        showToast("❌ Error: No se encontró el mantenimiento.");
-        return;
-      }
-
-      // 1. Rellenar los campos del formulario
-      document.getElementById('edit-maintenance-id').value = maintenanceId;
-      document.getElementById('edit-maintenance-bike').value = maintenance.bike_name; // Asignar el nombre de la bici
-      document.getElementById('edit-maintenance-type').value = maintenance.maintenance_type;
-      document.getElementById('edit-maintenance-component').value = maintenance.component;
-      document.getElementById('edit-maintenance-date').value = maintenance.date;
-      document.getElementById('edit-maintenance-km').value = maintenance.km_at_maintenance || '';
-      document.getElementById('edit-maintenance-cost').value = maintenance.cost || 0;
-      document.getElementById('edit-next-maintenance-km').value = maintenance.next_maintenance_km || '';
-      document.getElementById('edit-maintenance-notes').value = maintenance.notes || '';
-
-      // 2. Mostrar el modal
-      document.getElementById('edit-maintenance-modal').style.display = 'flex';
-    }
-
-
-    // Mostrar modal de edición de inventario
-    function showEditStockModal(stockId) {
-      const stock = allData.find(d => d.id === stockId);
-      if (!stock) return;
-
-      // 1. Rellenar campos principales
-      document.getElementById('edit-stock-id').value = stockId;
-      document.getElementById('edit-stock-name').value = stock.stock_name;
-      document.getElementById('edit-stock-category').value = stock.stock_category;
-      document.getElementById('edit-stock-brand').value = stock.stock_brand || '';
-      document.getElementById('edit-stock-quantity').value = stock.stock_quantity;
-      document.getElementById('edit-stock-min-quantity').value = stock.stock_min_quantity;
-      document.getElementById('edit-stock-unit-price').value = stock.stock_unit_price || 0;
-      document.getElementById('edit-stock-location').value = stock.stock_location || '';
-      document.getElementById('edit-stock-notes').value = stock.stock_notes || '';
-
-      // 2. Mostrar el modal
-      document.getElementById('edit-stock-modal').style.display = 'flex';
-    }
-
-    // Manejar la actualización del inventario
-    async function handleUpdateStock() {
-      const stockId = document.getElementById('edit-stock-id').value;
-      const stock = allData.find(d => d.id === stockId);
-      if (!stock) return;
-
-      const saveBtn = document.querySelector('#edit-stock-modal .btn-primary');
-      saveBtn.disabled = true;
-      saveBtn.textContent = 'Actualizando...';
-
-      const updatedStockData = {
-          stock_name: document.getElementById('edit-stock-name').value,
-          stock_category: document.getElementById('edit-stock-category').value,
-          stock_brand: document.getElementById('edit-stock-brand').value || '',
-          stock_quantity: parseInt(document.getElementById('edit-stock-quantity').value) || 0,
-          stock_min_quantity: parseInt(document.getElementById('edit-stock-min-quantity').value) || 1,
-          stock_unit_price: parseFloat(document.getElementById('edit-stock-unit-price').value) || 0,
-          stock_location: document.getElementById('edit-stock-location').value || '',
-          stock_notes: document.getElementById('edit-stock-notes').value || '',
-          id: stockId // ¡Importante!
-      };
-      
-      const result = await updateData(updatedStockData);
-
-      saveBtn.disabled = false;
-      saveBtn.textContent = 'Guardar Cambios';
-
-      if (result.isOk) {
-          closeModal('edit-stock-modal');
-          showToast("✅ Material actualizado correctamente");
-      } else {
-          showToast("❌ Error al actualizar el material");
-      }
-    }
 
 
     // --- 7. FUNCIONES DE UI Y RENDERIZADO ---
@@ -2480,13 +2300,13 @@
     function showAddMaintenanceForm() {
       document.getElementById('maintenance-form').style.display = 'block';
       document.getElementById('maintenance-list').style.display = 'none';
-      document.querySelector('#maintenance-view .toolbar').style.display = 'none';
+      document.querySelector('.toolbar').style.display = 'none';
     }
 
     function hideAddMaintenanceForm() {
       document.getElementById('maintenance-form').style.display = 'none';
       document.getElementById('maintenance-list').style.display = 'flex';
-      document.querySelector('#maintenance-view .toolbar').style.display = 'flex';
+      document.querySelector('.toolbar').style.display = 'flex';
       document.getElementById('new-maintenance-form').reset();
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('maintenance-date').value = today;
@@ -2495,17 +2315,13 @@
     function showAddStockForm() {
       document.getElementById('stock-form').style.display = 'block';
       document.getElementById('stock-list').style.display = 'none';
-      // Corrección: Usar un selector específico para el toolbar de stock
-      const stockToolbar = document.querySelector('#stock-view .toolbar'); 
-      if (stockToolbar) stockToolbar.style.display = 'none';
+      document.querySelectorAll('.toolbar')[1].style.display = 'none';
     }
 
     function hideAddStockForm() {
       document.getElementById('stock-form').style.display = 'none';
       document.getElementById('stock-list').style.display = 'grid';
-      // Corrección: Usar un selector específico para el toolbar de stock
-      const stockToolbar = document.querySelector('#stock-view .toolbar');
-      if (stockToolbar) stockToolbar.style.display = 'flex';
+      document.querySelectorAll('.toolbar')[1].style.display = 'flex';
       document.getElementById('new-stock-form').reset();
     }
 
@@ -2681,7 +2497,7 @@
               </div>
               <div class="maintenance-actions">
                   <button class="edit-maintenance" onclick="showEditMaintenanceModal('${m.id}')" title="Editar mantenimiento">✏️</button>
-                  <button class="delete-maintenance" onclick="showDeleteMaintenanceConfirmation('${m.id}')" title="Eliminar mantenimiento">×</button>
+                  <button class="delete-maintenance" onclick="deleteMaintenance('${m.id}')" title="Eliminar mantenimiento">×</button>
               </div>
             </div>
             <div>
@@ -2701,7 +2517,7 @@
 
     function renderStock() {
       const stockList = document.getElementById('stock-list');
-      let stock = allData.filter(d => d.type === 'stock');
+      const stock = allData.filter(d => d.type === 'stock');
 
       if (currentStockCategoryFilter) {
         stock = stock.filter(s => s.stock_category === currentStockCategoryFilter);
@@ -2782,10 +2598,7 @@
                 <span class="stock-category">${s.stock_category}</span>
                 ${s.stock_brand ? `<div class="stock-brand">Marca: ${s.stock_brand}</div>` : ''}
               </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <button class="edit-bike-btn" onclick="showEditStockModal('${s.id}')" title="Editar material">✏️</button>
-                <button class="delete-stock" onclick="showDeleteStockConfirmation('${s.id}')" title="Eliminar material">×</button>
-              </div>
+              <button class="delete-stock" onclick="deleteStock('${s.id}')" title="Eliminar material">×</button>
             </div>
             <div class="${quantityClass}">
               <div>
@@ -3013,14 +2826,11 @@
       const categories = [...new Set(stock.map(s => s.stock_category))].sort();
       
       const filterCategorySelect = document.getElementById('filter-stock-category');
-      
-      // Asegurarse de que el selector existe antes de intentar modificarlo
-      if (filterCategorySelect) {
-        const categoryOptions = categories.map(cat => 
-          `<option value="${cat}">${cat}</option>`
-        ).join('');
-        filterCategorySelect.innerHTML = '<option value="">Todas</option>' + categoryOptions;
-      }
+      const categoryOptions = categories.map(cat => 
+        `<option value="${cat}">${cat}</option>`
+      ).join('');
+
+      filterCategorySelect.innerHTML = '<option value="">Todas</option>' + categoryOptions;
     }
 
     let currentFilter = "";
@@ -3041,15 +2851,9 @@
     }
 
     function filterStock() {
-      // Asegurarse de que los elementos existen antes de leerlos
-      const categorySelect = document.getElementById('filter-stock-category');
-      const statusSelect = document.getElementById('filter-stock-status');
-      const searchInput = document.getElementById('search-stock');
-
-      currentStockCategoryFilter = categorySelect ? categorySelect.value : "";
-      currentStockStatusFilter = statusSelect ? statusSelect.value : "";
-      currentStockSearch = searchInput ? searchInput.value : "";
-      
+      currentStockCategoryFilter = document.getElementById('filter-stock-category').value;
+      currentStockStatusFilter = document.getElementById('filter-stock-status').value;
+      currentStockSearch = document.getElementById('search-stock').value;
       renderStock();
     }
 
@@ -3141,95 +2945,6 @@
       };
     }
 
-    // Modal de confirmación para eliminar inventario
-    function showDeleteStockConfirmation(stockId) {
-      const stock = allData.find(d => d.id === stockId);
-      if (!stock) return;
-
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'delete-stock-modal';
-      
-      modal.innerHTML = `
-        <div class="modal-content" style="max-width: 450px;">
-          <h3 style="margin: 0 0 15px 0; color: #e53e3e; font-size: 22px; font-weight: 800;">
-            🚨 Confirmar Eliminación
-          </h3>
-          <p style="font-size: 16px; color: #2d3748; line-height: 1.6; margin-bottom: 25px;">
-            ¿Estás seguro de que quieres eliminar <strong>${stock.stock_name}</strong> del inventario?
-            <br>
-            <span style="font-weight: 700; color: #c53030; display: block; margin-top: 10px;">Esta acción no se puede deshacer.</span>
-          </p>
-          
-          <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button id="confirm-delete-stock-btn" class="btn-primary" style="flex: 1; background-color: #e53e3e; border-color: #e53e3e;">
-              Sí, Eliminar
-            </button>
-            <button onclick="closeModal('delete-stock-modal')" class="btn-secondary" style="flex: 1;">
-              Cancelar
-            </button>
-          </div>
-        </div>
-      `;
-      
-      modal.onclick = (e) => {
-        if (e.target === modal) {
-          closeModal('delete-stock-modal');
-        }
-      };
-      
-      document.body.appendChild(modal);
-
-      document.getElementById('confirm-delete-stock-btn').onclick = async () => {
-        await deleteStock(stockId);
-      };
-    }
-
-    // *** ¡FUNCIÓN AÑADIDA! ***
-    // Modal de confirmación para eliminar mantenimiento
-    function showDeleteMaintenanceConfirmation(maintenanceId) {
-      const maintenance = allData.find(d => d.id === maintenanceId);
-      if (!maintenance) return;
-
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'delete-maintenance-modal';
-      
-      modal.innerHTML = `
-        <div class="modal-content" style="max-width: 450px;">
-          <h3 style="margin: 0 0 15px 0; color: #e53e3e; font-size: 22px; font-weight: 800;">
-            🚨 Confirmar Eliminación
-          </h3>
-          <p style="font-size: 16px; color: #2d3748; line-height: 1.6; margin-bottom: 25px;">
-            ¿Estás seguro de que quieres eliminar el mantenimiento "${maintenance.maintenance_type}" para la bicicleta "<strong>${maintenance.bike_name}</strong>"?
-            <br>
-            <span style="font-weight: 700; color: #c53030; display: block; margin-top: 10px;">Esta acción no se puede deshacer.</span>
-          </p>
-          
-          <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button id="confirm-delete-maintenance-btn" class="btn-primary" style="flex: 1; background-color: #e53e3e; border-color: #e53e3e;">
-              Sí, Eliminar
-            </button>
-            <button onclick="closeModal('delete-maintenance-modal')" class="btn-secondary" style="flex: 1;">
-              Cancelar
-            </button>
-          </div>
-        </div>
-      `;
-      
-      modal.onclick = (e) => {
-        if (e.target === modal) {
-          closeModal('delete-maintenance-modal');
-        }
-      };
-      
-      document.body.appendChild(modal);
-
-      document.getElementById('confirm-delete-maintenance-btn').onclick = async () => {
-        await deleteMaintenance(maintenanceId);
-      };
-    }
-
     function closeModal(modalId) {
       const modal = document.getElementById(modalId);
       if (modal) {
@@ -3261,14 +2976,7 @@
           if (document.getElementById('edit-maintenance-modal')) closeModal('edit-maintenance-modal');
           if (document.getElementById('edit-bike-modal')) closeModal('edit-bike-modal');
           if (document.getElementById('km-modal')) closeModal('km-modal');
-          if (document.getElementById('delete-bike-modal')) closeModal('delete-bike-modal');
-          
-          // MODALES DE STOCK
-          if (document.getElementById('edit-stock-modal')) closeModal('edit-stock-modal');
-          if (document.getElementById('delete-stock-modal')) closeModal('delete-stock-modal');
-
-          // MODAL DE MANTENIMIENTO
-          if (document.getElementById('delete-maintenance-modal')) closeModal('delete-maintenance-modal');
+          if (document.getElementById('delete-bike-modal')) closeModal('delete-bike-modal'); // Añadir el nuevo modal
       }
     });
 
