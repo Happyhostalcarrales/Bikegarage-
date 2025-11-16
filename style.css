@@ -924,39 +924,36 @@ body {
     }
   }
   
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  /* CAMBIOS CLAVE: Quitamos align-items: center para que el modal suba */
-  /* Lo reemplazamos por el margen del propio scroll */
-  align-items: flex-start; /* Mover el contenido hacia arriba */
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease;
-  overflow-y: auto; 
-  padding: 20px 0; /* Aseguramos un padding vertical para que el modal no toque los bordes */
-}
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: flex-start; /* CORREGIDO: Para que el contenido pueda empezar arriba */
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+    overflow-y: auto; 
+    padding: 20px 0; /* Aseguramos un padding vertical para que el modal no toque los bordes */
+  }
   
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
   }
   
-.modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
-  max-width: 650px; /* Ancho ajustado para la edición de componentes */
-  width: 90%;
-  animation: scaleIn 0.3s ease;
-  /* El margen automático asegura que si el contenido es corto, se centre. Si es largo, se pegue al top del scroll. */
-  margin: auto; 
-}
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 650px; /* Ancho ajustado para la edición de componentes */
+    width: 90%;
+    animation: scaleIn 0.3s ease;
+    margin: auto; /* CORREGIDO: Permite el centrado cuando es corto, pero respeta el top en scroll */
+  }
   
   @keyframes scaleIn {
     from {
@@ -1123,7 +1120,6 @@ body {
     border-radius: 16px;
     font-size: 12px;
     font-weight: 700;
-    margin-bottom: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -1233,7 +1229,6 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-weight: 700;
   }
   
   .delete-stock:hover {
@@ -1483,5 +1478,4 @@ body {
       padding: 8px 12px;
       font-size: 12px;
   }
-
 }
