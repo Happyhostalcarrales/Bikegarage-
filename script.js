@@ -309,7 +309,7 @@ function showEditBikeModal(bikeId) {
     // 1. Rellenar campos principales (protegidos contra null con checks)
     document.getElementById('edit-bike-id').value = bikeId;
     
-    // Asignación con protección (blindado contra TypeError)
+    // Asignación con protección
     const nameInput = document.getElementById('edit-bike-name');
     if (nameInput) nameInput.value = bike.bike_name;
 
@@ -317,14 +317,14 @@ function showEditBikeModal(bikeId) {
     if (typeSelect) typeSelect.value = bike.bike_type;
 
     const colorInput = document.getElementById('edit-bike-color');
-    if (colorInput) colorInput.value = bike.bike_color || ''; // Línea crítica ahora protegida
+    if (colorInput) colorInput.value = bike.bike_color || ''; // LÍNEA CRÍTICA PROTEGIDA
 
     const kmInput = document.getElementById('edit-bike-km');
-    if (kmInput) kmInput.value = bike.total_km || ''; 
+    if (kmInput) kmInput.value = bike.total_km || ''; // LÍNEA CRÍTICA PROTEGIDA
     
     // 2. Lógica para mostrar opción de eliminar la imagen existente
     const imageInfo = document.getElementById('edit-bike-image-info');
-    if (imageInfo) {
+    if (imageInfo) { // <--- PROTECCIÓN CRÍTICA AÑADIDA
       if (bike.imageURL) {
         imageInfo.innerHTML = `<p style="margin-top: 10px;">✅ Imagen actual adjunta. <label><input type="checkbox" id="delete-current-bike-image"> Eliminar imagen actual</label></p>`;
       } else {
@@ -383,7 +383,8 @@ async function handleUpdateBike() {
             const snapshot = await fileRef.put(file);
             const newImageURL = await snapshot.ref.getDownloadURL();
             
-            imageURL = newImageURL; // Usar la nueva URL
+            // Si el usuario subió una imagen nueva, esta se convierte en la nueva URL
+            imageURL = newImageURL; 
             saveBtn.textContent = 'Guardando datos...';
         } catch (error) {
             console.error("Error al subir imagen:", error);
@@ -841,11 +842,11 @@ function showEditBikeModal(bikeId) {
     if (colorInput) colorInput.value = bike.bike_color || ''; // LÍNEA CRÍTICA PROTEGIDA
 
     const kmInput = document.getElementById('edit-bike-km');
-    if (kmInput) kmInput.value = bike.total_km || ''; 
+    if (kmInput) kmInput.value = bike.total_km || ''; // LÍNEA CRÍTICA PROTEGIDA
     
     // 2. Lógica para mostrar opción de eliminar la imagen existente
     const imageInfo = document.getElementById('edit-bike-image-info');
-    if (imageInfo) {
+    if (imageInfo) { // <--- PROTECCIÓN CRÍTICA AÑADIDA
       if (bike.imageURL) {
         imageInfo.innerHTML = `<p style="margin-top: 10px;">✅ Imagen actual adjunta. <label><input type="checkbox" id="delete-current-bike-image"> Eliminar imagen actual</label></p>`;
       } else {
