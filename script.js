@@ -1,5 +1,7 @@
 // --- 1. FIREBASE CONFIGURACIÓN E INICIALIZACIÓN ---
     
+// ¡¡¡ RECUERDA: Las claves de la API están diseñadas para ser públicas !!!
+// La seguridad se aplica en la consola de Firebase con las Reglas de Seguridad.
 const firebaseConfig = {
   apiKey: "AIzaSyA3D7fH6QpdG7mUSNhFfUzD6RWje8TpGEk",
   authDomain: "hostaldatossincro.firebaseapp.com",
@@ -37,6 +39,7 @@ const DEFAULT_COMPONENTS = [
     { name: "Transmisión", notes: "Marca y número de velocidades/platos", id: 'comp-' + Date.now() + 4 },
     { name: "Frenos", notes: "Marca, modelo, tipo de pastillas", id: 'comp-' + Date.now() + 5 },
 ];
+
 
 // --- FUNCIONES AUXILIARES DE IMAGEN ---
 
@@ -310,7 +313,7 @@ function showEditBikeModal(bikeId) {
     document.getElementById('edit-bike-color').value = bike.bike_color;
     
     const kmInput = document.getElementById('edit-bike-km');
-    if (kmInput) kmInput.value = bike.total_km; 
+    if (kmInput) kmInput.value = bike.total_km || ''; // Aseguramos un valor seguro
     
     // El input de tipo file no se rellena por seguridad.
 
@@ -339,14 +342,20 @@ async function handleUpdateBike() {
 
     if (file) {
         saveBtn.textContent = 'Subiendo nueva imagen...';
-        // Usar la misma ruta para sobreescribir la imagen antigua (si existe) o crear una nueva
+        // Usar una ruta única para asegurar que la nueva imagen no interfiera con la caché antigua
         const filePath = `uploads/${userId}/bikes/${Date.now()}_${file.name}`;
         const fileRef = storage.ref(filePath);
         
         try {
             // Sube el nuevo archivo.
             const snapshot = await fileRef.put(file);
-            imageURL = await snapshot.ref.getDownloadURL();
+            const newImageURL = await snapshot.ref.getDownloadURL();
+            
+            // Si ya existía una URL antigua, borrar la imagen antigua (opcional, para liberar espacio)
+            if (bike.imageURL) {
+                // deleteImageFromStorage(bike.imageURL); // Descomentar para borrar la imagen antigua
+            }
+            imageURL = newImageURL; // Usar la nueva URL
             saveBtn.textContent = 'Guardando datos...';
         } catch (error) {
             console.error("Error al subir imagen:", error);
@@ -377,6 +386,7 @@ async function handleUpdateBike() {
     });
     
     const updatedBikeData = {
+        // Campos que pueden cambiar
         bike_name: document.getElementById('edit-bike-name').value,
         bike_type: document.getElementById('edit-bike-type').value,
         bike_color: document.getElementById('edit-bike-color').value,
@@ -752,6 +762,7 @@ async function handleUpdateMaintenance() {
     }
 }
 
+// CORREGIDO: showEditMaintenanceModal (Protegido contra TypeError)
 function showEditMaintenanceModal(maintenanceId) {
   const maintenance = allData.find(d => d.id === maintenanceId);
   if (!maintenance) {
@@ -759,17 +770,20 @@ function showEditMaintenanceModal(maintenanceId) {
     return;
   }
 
-  // 1. Rellenar los campos del formulario
+  // 1. Rellenar los campos del formulario (usando || '' para seguridad)
   document.getElementById('edit-maintenance-id').value = maintenanceId;
-  document.getElementById('edit-maintenance-bike').value = maintenance.bike_name; 
-  document.getElementById('edit-maintenance-type').value = maintenance.maintenance_type;
-  document.getElementById('edit-maintenance-component').value = maintenance.component;
-  document.getElementById('edit-maintenance-date').value = maintenance.date;
+  document.getElementById('edit-maintenance-bike').value = maintenance.bike_name || ''; 
+
+  document.getElementById('edit-maintenance-type').value = maintenance.maintenance_type || '';
+  document.getElementById('edit-maintenance-component').value = maintenance.component || '';
+  
+  // Inputs de fecha y número
+  document.getElementById('edit-maintenance-date').value = maintenance.date || '';
   document.getElementById('edit-maintenance-km').value = maintenance.km_at_maintenance || '';
   document.getElementById('edit-maintenance-cost').value = maintenance.cost || 0;
   document.getElementById('edit-next-maintenance-km').value = maintenance.next_maintenance_km || '';
   document.getElementById('edit-maintenance-notes').value = maintenance.notes || '';
-
+  
   // 2. Mostrar el modal
   document.getElementById('edit-maintenance-modal').style.display = 'flex';
 }
@@ -1277,100 +1291,113 @@ function renderStats() {
   
   const currencySymbol = defaultConfig.currency_symbol;
 
-  document.getElementById('general-stats').innerHTML = `
-    <div class="stat-card">
-      <span class="stat-card-icon">🚴</span>
-      <div class="stat-value">${bikes.length}</div>
-      <div class="stat-label">Bicicletas</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card-icon">🔧</span>
-      <div class="stat-value">${maintenance.length}</div>
-      <div class="stat-label">Mantenimientos</div>
-      <div class="stat-sublabel">${avgMaintenancePerBike.toFixed(1)} por bici</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card-icon">📍</span>
-      <div class="stat-value">${totalKm.toFixed(0)}</div>
-      <div class="stat-label">Km Totales</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card-icon">💰</span>
-      <div class="stat-value">${totalCost.toFixed(0)}${currencySymbol}</div>
-      <div class="stat-label">Coste Total</div>
-      <div class="stat-sublabel">${costPerKm.toFixed(2)}${currencySymbol}/km</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card-icon">📦</span>
-      <div class="stat-value">${stock.length}</div>
-      <div class="stat-label">Materiales</div>
-      <div class="stat-sublabel">${totalStockValue.toFixed(0)}${currencySymbol} en stock</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card-icon">⚠️</span>
-      <div class="stat-value">${lowStockItems + outOfStockItems}</div>
-      <div class="stat-label">Alertas Stock</div>
-      <div class="stat-sublabel">${outOfStockItems} sin stock</div>
-    </div>
-  `;
+  // CORREGIDO: Protección contra null en el elemento general-stats
+  const generalStats = document.getElementById('general-stats');
+  if (generalStats) {
+      generalStats.innerHTML = `
+        <div class="stat-card">
+          <span class="stat-card-icon">🚴</span>
+          <div class="stat-value">${bikes.length}</div>
+          <div class="stat-label">Bicicletas</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">🔧</span>
+          <div class="stat-value">${maintenance.length}</div>
+          <div class="stat-label">Mantenimientos</div>
+          <div class="stat-sublabel">${avgMaintenancePerBike.toFixed(1)} por bici</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">📍</span>
+          <div class="stat-value">${totalKm.toFixed(0)}</div>
+          <div class="stat-label">Km Totales</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">💰</span>
+          <div class="stat-value">${totalCost.toFixed(0)}${currencySymbol}</div>
+          <div class="stat-label">Coste Total</div>
+          <div class="stat-sublabel">${costPerKm.toFixed(2)}${currencySymbol}/km</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">📦</span>
+          <div class="stat-value">${stock.length}</div>
+          <div class="stat-label">Materiales</div>
+          <div class="stat-sublabel">${totalStockValue.toFixed(0)}${currencySymbol} en stock</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-icon">⚠️</span>
+          <div class="stat-value">${lowStockItems + outOfStockItems}</div>
+          <div class="stat-label">Alertas Stock</div>
+          <div class="stat-sublabel">${outOfStockItems} sin stock</div>
+        </div>
+      `;
+  }
+
 
   renderTopComponents(maintenance);
   renderBikeDetails(bikes, maintenance, currencySymbol);
 }
 
+// CORREGIDO: Protección contra null en renderTopComponents
 function renderTopComponents(maintenance) {
-  const componentCounts = {};
-  maintenance.forEach(m => {
-    componentCounts[m.component] = (componentCounts[m.component] || 0) + 1;
-  });
+    const topComponentsSection = document.getElementById('top-components-section');
+    if (!topComponentsSection) {
+        return; 
+    }
+    
+    const componentCounts = {};
+    maintenance.forEach(m => {
+        componentCounts[m.component] = (componentCounts[m.component] || 0) + 1;
+    });
 
-  const topComponents = Object.entries(componentCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
+    const topComponents = Object.entries(componentCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
 
-  if (topComponents.length === 0) {
-    document.getElementById('top-components-section').innerHTML = '';
-    return;
-  }
+    if (topComponents.length === 0) {
+        topComponentsSection.innerHTML = '';
+        return;
+    }
 
-  const maxCount = topComponents[0][1];
+    const maxCount = topComponents[0][1];
 
-  const topComponentsHTML = topComponents.map(([component, count], index) => {
-    const percentage = (count / maxCount) * 100;
-    let rankClass = '';
-    if (index === 0) rankClass = 'gold';
-    else if (index === 1) rankClass = 'silver';
-    else if (index === 2) rankClass = 'bronze';
+    const topComponentsHTML = topComponents.map(([component, count], index) => {
+        const percentage = (count / maxCount) * 100;
+        let rankClass = '';
+        if (index === 0) rankClass = 'gold';
+        else if (index === 1) rankClass = 'silver';
+        else if (index === 2) rankClass = 'bronze';
 
-    return `
-      <div class="top-component-item">
-        <div class="rank-badge ${rankClass}">${index + 1}</div>
-        <div style="flex: 1;">
-          <div style="font-weight: 700; color: #2d3748; margin-bottom: 5px;">${component}</div>
-          <div class="component-bar">
-            <div class="component-bar-fill" style="width: ${percentage}%"></div>
+        return `
+          <div class="top-component-item">
+            <div class="rank-badge ${rankClass}">${index + 1}</div>
+            <div style="flex: 1;">
+              <div style="font-weight: 700; color: #2d3748; margin-bottom: 5px;">${component}</div>
+              <div class="component-bar">
+                <div class="component-bar-fill" style="width: ${percentage}%"></div>
+              </div>
+            </div>
+            <div style="font-weight: 800; color: #667eea; font-size: 18px;">${count}</div>
           </div>
-        </div>
-        <div style="font-weight: 800; color: #667eea; font-size: 18px;">${count}</div>
-      </div>
-    `;
-  }).join('');
+        `;
+    }).join('');
 
-  document.getElementById('top-components-section').innerHTML = `
-    <div class="top-components">
-      <h3>🏆 Top 5 Componentes Más Cambiados</h3>
-      ${topComponentsHTML}
-    </div>
-  `;
+    topComponentsSection.innerHTML = `
+        <div class="top-components">
+          <h3>🏆 Top 5 Componentes Más Cambiados</h3>
+          ${topComponentsHTML}
+        </div>
+      `;
 }
 
 function renderBikeDetails(bikes, maintenance, currencySymbol) {
   const bikeDetailsSection = document.getElementById('bike-details-section');
   
   if (bikes.length === 0) {
-    bikeDetailsSection.innerHTML = '';
+    if (bikeDetailsSection) bikeDetailsSection.innerHTML = '';
     return;
   }
+
+  if (!bikeDetailsSection) return; // Protección
 
   bikeDetailsSection.innerHTML = bikes.map(bike => {
     const bikeMaintenance = maintenance.filter(m => m.bike_id === bike.id);
