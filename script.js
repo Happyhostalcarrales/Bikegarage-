@@ -309,7 +309,7 @@ function showEditBikeModal(bikeId) {
     // 1. Rellenar campos principales (protegidos contra null con checks)
     document.getElementById('edit-bike-id').value = bikeId;
     
-    // Asignación con protección (blindado contra TypeError)
+    // Asignación con protección
     const nameInput = document.getElementById('edit-bike-name');
     if (nameInput) nameInput.value = bike.bike_name;
 
@@ -330,6 +330,7 @@ function showEditBikeModal(bikeId) {
       } else {
         imageInfo.innerHTML = `<p style="margin-top: 10px;">❌ No hay imagen adjunta.</p>`;
       }
+      document.getElementById('edit-bike-image').value = ''; // Limpiar el input file
     }
 
 
@@ -340,7 +341,7 @@ function showEditBikeModal(bikeId) {
     document.getElementById('edit-bike-modal').style.display = 'flex';
 }
 
-// Manejar la actualización de la bicicleta (AHORA incluye la lógica de imagen y borrado)
+// Manejar la actualización de la bicicleta (AHORA incluye la lógica de imagen)
 async function handleUpdateBike() {
     
     const bikeId = document.getElementById('edit-bike-id').value;
@@ -1818,9 +1819,13 @@ function showDeleteMaintenanceConfirmation(maintenanceId) {
 function closeModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
-    // Para evitar problemas en modals que se cierran desde dentro de otros
-    if (modal.parentElement) {
-      modal.parentElement.removeChild(modal);
+    // Si es un modal creado estáticamente, solo lo ocultamos. 
+    // Si es un modal creado dinámicamente (como el de KM), lo removemos.
+    if (modalId === 'edit-bike-modal' || modalId === 'edit-maintenance-modal' || modalId === 'edit-stock-modal') {
+        modal.style.display = 'none';
+    } else {
+        // Para modales dinámicos (como km-modal, delete-modal)
+        modal.remove();
     }
   }
 }
