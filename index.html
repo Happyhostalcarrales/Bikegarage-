@@ -325,7 +325,19 @@
             </select>
           </div>
         </div>
+        
+        <div class="form-section">
+            <h2>🛒 Búsqueda de Ofertas y Material</h2>
+            <p style="margin-bottom: 15px; color: #4a5568;">Busca tu material en tiendas online para encontrar el mejor precio. Ej: 'cadena 11v', 'pastillas shimano', 'grasa litio'.</p>
 
+            <div class="form-group full-width" style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="deal-search-query" placeholder="Buscar material (ej: 'cubierta maxxis', 'grasa')" style="flex-grow: 1;">
+                <button type="button" class="btn-primary" style="width: 150px; padding: 12px;" onclick="searchDeals()">Buscar Ofertas</button>
+            </div>
+
+            <div id="deal-results-list" style="margin-top: 20px;">
+                </div>
+        </div>
         <div id="stock-form" style="display: none;">
           <div class="form-section">
             <h2>Añadir Material al Inventario</h2>

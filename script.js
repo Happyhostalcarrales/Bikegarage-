@@ -341,7 +341,7 @@ function showEditBikeModal(bikeId) {
     document.getElementById('edit-bike-modal').style.display = 'flex';
 }
 
-// Manejar la actualización de la bicicleta (AHORA incluye la lógica de imagen)
+// Manejar la actualización de la bicicleta (AHORA incluye la lógica de imagen y borrado)
 async function handleUpdateBike() {
     
     const bikeId = document.getElementById('edit-bike-id').value;
