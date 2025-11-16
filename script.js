@@ -1,7 +1,5 @@
 // --- 1. FIREBASE CONFIGURACIÓN E INICIALIZACIÓN ---
     
-// ¡¡¡ RECUERDA: Las claves de la API están diseñadas para ser públicas !!!
-// La seguridad se aplica en la consola de Firebase con las Reglas de Seguridad.
 const firebaseConfig = {
   // CORREGIDO: databaseURL sin el espacio.
   apiKey: "AIzaSyA3D7fH6QpdG7mUSNhFfUzD6RWje8TpGEk",
@@ -18,7 +16,8 @@ try {
     firebase.initializeApp(firebaseConfig);
 } catch (e) {
     console.error("FIREBASE INITIALIZATION ERROR: ", e);
-    alert("Error de configuración. Revisa tus claves de Firebase.");
+    // Si la inicialización falla, el login no funcionará.
+    // Dejamos que continúe para que el auth.onAuthStateChanged muestre el login si puede.
 }
 
 const auth = firebase.auth();
@@ -122,7 +121,6 @@ auth.onAuthStateChanged(user => {
     }
     // Limpiar vistas (si los elementos existen)
     if (document.getElementById('bikes-list')) document.getElementById('bikes-list').innerHTML = '';
-    // ... y el resto de limpiezas de vistas
     if (document.getElementById('maintenance-list')) document.getElementById('maintenance-list').innerHTML = '';
     if (document.getElementById('stock-list')) document.getElementById('stock-list').innerHTML = '';
     if (document.getElementById('general-stats')) document.getElementById('general-stats').innerHTML = '';
@@ -232,7 +230,6 @@ async function handleAddBike(event) {
   // 2. Si hay un archivo, subirlo a Firebase Storage
   if (file) {
     saveBtn.textContent = 'Subiendo imagen...';
-    // CORREGIDO: Ruta de Storage: 'uploads' debe coincidir con las Reglas de Seguridad
     const filePath = `uploads/${userId}/bikes/${Date.now()}_${file.name}`;
     const fileRef = storage.ref(filePath);
     
@@ -275,19 +272,23 @@ async function handleAddBike(event) {
   }
 }
 
-// Mostrar modal de edición de bicicleta
+// Mostrar modal de edición de bicicleta (Corregido el bug de Cannot set properties of null)
 function showEditBikeModal(bikeId) {
     const bike = allData.find(d => d.id === bikeId);
     if (!bike) return;
 
     currentBikeId = bikeId;
 
-    // 1. Rellenar campos principales
+    // 1. Rellenar campos principales (protegidos contra null)
     document.getElementById('edit-bike-id').value = bikeId;
     document.getElementById('edit-bike-name').value = bike.bike_name;
     document.getElementById('edit-bike-type').value = bike.bike_type;
     document.getElementById('edit-bike-color').value = bike.bike_color;
-    document.getElementById('edit-bike-km').value = bike.total_km;
+    
+    const kmInput = document.getElementById('edit-bike-km');
+    if (kmInput) kmInput.value = bike.total_km; 
+    
+    // El input de tipo file no se rellena por seguridad.
 
     // 2. Rellenar y renderizar componentes
     renderComponentInputs(bike.components || DEFAULT_COMPONENTS);
@@ -296,7 +297,7 @@ function showEditBikeModal(bikeId) {
     document.getElementById('edit-bike-modal').style.display = 'flex';
 }
 
-// Manejar la actualización de la bicicleta (sin lógica de cambio de imagen aún)
+// Manejar la actualización de la bicicleta (AHORA incluye la lógica de imagen)
 async function handleUpdateBike() {
     
     const bikeId = document.getElementById('edit-bike-id').value;
@@ -306,6 +307,31 @@ async function handleUpdateBike() {
     const saveBtn = document.querySelector('#edit-bike-modal .btn-primary');
     saveBtn.disabled = true;
     saveBtn.textContent = 'Actualizando...';
+
+    // Lógica para subida/actualización de imagen
+    const fileInput = document.getElementById('edit-bike-image');
+    const file = fileInput.files[0];
+    let imageURL = bike.imageURL; // Mantener la URL antigua por defecto
+
+    if (file) {
+        saveBtn.textContent = 'Subiendo nueva imagen...';
+        const filePath = `uploads/${userId}/bikes/${Date.now()}_${file.name}`;
+        const fileRef = storage.ref(filePath);
+        
+        try {
+            // Sube el nuevo archivo, esto reemplazará la imagen si la ruta es la misma.
+            const snapshot = await fileRef.put(file);
+            imageURL = await snapshot.ref.getDownloadURL();
+            saveBtn.textContent = 'Guardando datos...';
+        } catch (error) {
+            console.error("Error al subir imagen:", error);
+            showToast("❌ Error al subir la imagen nueva.");
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar Cambios';
+            return; 
+        }
+    }
+
 
     // 1. Recoger los componentes editados
     const componentsListElement = document.getElementById('components-list-edit');
@@ -331,6 +357,7 @@ async function handleUpdateBike() {
         bike_type: document.getElementById('edit-bike-type').value,
         bike_color: document.getElementById('edit-bike-color').value,
         components: updatedComponents, 
+        imageURL: imageURL, // <-- AHORA GUARDA LA NUEVA URL O LA ANTIGUA
         id: bikeId
     };
     
@@ -691,7 +718,6 @@ function showEditMaintenanceModal(maintenanceId) {
   document.getElementById('edit-maintenance-cost').value = maintenance.cost || 0;
   document.getElementById('edit-next-maintenance-km').value = maintenance.next_maintenance_km || '';
   document.getElementById('edit-maintenance-notes').value = maintenance.notes || '';
-  // NO rellenamos el input file, ya que por seguridad el navegador no lo permite.
 
   // 2. Mostrar el modal
   document.getElementById('edit-maintenance-modal').style.display = 'flex';
