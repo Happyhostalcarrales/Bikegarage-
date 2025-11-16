@@ -2002,7 +2002,7 @@
       if (file) {
         saveBtn.textContent = 'Subiendo imagen...';
         // Crear una ruta única para el archivo
-        const filePath = `user_uploads/${userId}/${Date.now()}_${file.name}`;
+        const filePath = `uploads/${userId}/${Date.now()}_${file.name}`;
         const fileRef = storage.ref(filePath);
         
         try {
@@ -3329,3 +3329,4 @@
   </script>
  </body>
 </html>
+
