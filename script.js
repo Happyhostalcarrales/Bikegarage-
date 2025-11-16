@@ -306,14 +306,21 @@ function showEditBikeModal(bikeId) {
 
     currentBikeId = bikeId;
 
-    // 1. Rellenar campos principales (protegidos contra null)
+    // 1. Rellenar campos principales (protegidos contra null con checks)
     document.getElementById('edit-bike-id').value = bikeId;
-    document.getElementById('edit-bike-name').value = bike.bike_name;
-    document.getElementById('edit-bike-type').value = bike.bike_type;
-    document.getElementById('edit-bike-color').value = bike.bike_color;
     
+    // Asignación con protección
+    const nameInput = document.getElementById('edit-bike-name');
+    if (nameInput) nameInput.value = bike.bike_name;
+
+    const typeSelect = document.getElementById('edit-bike-type');
+    if (typeSelect) typeSelect.value = bike.bike_type;
+
+    const colorInput = document.getElementById('edit-bike-color');
+    if (colorInput) colorInput.value = bike.bike_color;
+
     const kmInput = document.getElementById('edit-bike-km');
-    if (kmInput) kmInput.value = bike.total_km || ''; // Aseguramos un valor seguro
+    if (kmInput) kmInput.value = bike.total_km || ''; 
     
     // El input de tipo file no se rellena por seguridad.
 
@@ -342,7 +349,7 @@ async function handleUpdateBike() {
 
     if (file) {
         saveBtn.textContent = 'Subiendo nueva imagen...';
-        // Usar una ruta única para asegurar que la nueva imagen no interfiera con la caché antigua
+        // Usar una ruta única para sobreescribir la imagen antigua (si existe) o crear una nueva
         const filePath = `uploads/${userId}/bikes/${Date.now()}_${file.name}`;
         const fileRef = storage.ref(filePath);
         
@@ -352,9 +359,8 @@ async function handleUpdateBike() {
             const newImageURL = await snapshot.ref.getDownloadURL();
             
             // Si ya existía una URL antigua, borrar la imagen antigua (opcional, para liberar espacio)
-            if (bike.imageURL) {
-                // deleteImageFromStorage(bike.imageURL); // Descomentar para borrar la imagen antigua
-            }
+            // if (bike.imageURL) { deleteImageFromStorage(bike.imageURL); }
+            
             imageURL = newImageURL; // Usar la nueva URL
             saveBtn.textContent = 'Guardando datos...';
         } catch (error) {
@@ -774,8 +780,12 @@ function showEditMaintenanceModal(maintenanceId) {
   document.getElementById('edit-maintenance-id').value = maintenanceId;
   document.getElementById('edit-maintenance-bike').value = maintenance.bike_name || ''; 
 
-  document.getElementById('edit-maintenance-type').value = maintenance.maintenance_type || '';
-  document.getElementById('edit-maintenance-component').value = maintenance.component || '';
+  // Asignamos valores solo si los elementos SELECT existen
+  const typeSelect = document.getElementById('edit-maintenance-type');
+  if (typeSelect) typeSelect.value = maintenance.maintenance_type || '';
+
+  const componentSelect = document.getElementById('edit-maintenance-component');
+  if (componentSelect) componentSelect.value = maintenance.component || '';
   
   // Inputs de fecha y número
   document.getElementById('edit-maintenance-date').value = maintenance.date || '';
@@ -1282,7 +1292,7 @@ function renderStats() {
   const totalKm = bikes.reduce((sum, b) => sum + (b.total_km || 0), 0);
   const totalCost = maintenance.reduce((sum, m) => sum + (m.cost || 0), 0);
   const avgCostPerBike = bikes.length > 0 ? totalCost / bikes.length : 0;
-  const costPerKm = totalKm > 0 ? totalCost / totalKm : 0;
+  const costPerKm = totalCost > 0 && totalKm > 0 ? totalCost / totalKm : 0;
   const avgMaintenancePerBike = bikes.length > 0 ? maintenance.length / bikes.length : 0;
   
   const totalStockValue = stock.reduce((sum, s) => sum + (s.stock_quantity * s.stock_unit_price), 0);
