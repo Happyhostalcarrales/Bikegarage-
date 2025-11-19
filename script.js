@@ -299,7 +299,7 @@ async function handleAddBike(event) {
   }
 }
 
-// Mostrar modal de edición de bicicleta (Corregido el bug de Cannot set properties of null)
+// Mostrar modal de edición de bicicleta (CRÍTICO: Muestra la ventana superpuesta)
 function showEditBikeModal(bikeId) {
     const bike = allData.find(d => d.id === bikeId);
     if (!bike) return;
@@ -317,14 +317,14 @@ function showEditBikeModal(bikeId) {
     if (typeSelect) typeSelect.value = bike.bike_type;
 
     const colorInput = document.getElementById('edit-bike-color');
-    if (colorInput) colorInput.value = bike.bike_color || ''; // LÍNEA CRÍTICA PROTEGIDA
+    if (colorInput) colorInput.value = bike.bike_color || ''; 
 
     const kmInput = document.getElementById('edit-bike-km');
-    if (kmInput) kmInput.value = bike.total_km || ''; // LÍNEA CRÍTICA PROTEGIDA
+    if (kmInput) kmInput.value = bike.total_km || ''; 
     
-    // 2. Lógica para mostrar opción de eliminar la imagen existente (SOLUCIÓN AL ERROR DE LÍNEA 831)
+    // 2. Lógica para mostrar opción de eliminar la imagen existente
     const imageInfo = document.getElementById('edit-bike-image-info');
-    if (imageInfo) { // <--- PROTECCIÓN CRÍTICA AÑADIDA
+    if (imageInfo) { 
       if (bike.imageURL) {
         imageInfo.innerHTML = `<p style="margin-top: 10px;">✅ Imagen actual adjunta. <label><input type="checkbox" id="delete-current-bike-image"> Eliminar imagen actual</label></p>`;
       } else {
@@ -337,11 +337,11 @@ function showEditBikeModal(bikeId) {
     // 3. Rellenar y renderizar componentes
     renderComponentInputs(bike.components || DEFAULT_COMPONENTS);
 
-    // 4. Mostrar el modal
+    // 4. Mostrar el modal (CRÍTICO: Esto hace que aparezca superpuesto)
     document.getElementById('edit-bike-modal').style.display = 'flex';
 }
 
-// Manejar la actualización de la bicicleta (AHORA incluye la lógica de imagen y borrado)
+// Manejar la actualización de la bicicleta 
 async function handleUpdateBike() {
     
     const bikeId = document.getElementById('edit-bike-id').value;
@@ -763,7 +763,6 @@ async function handleUpdateMaintenance() {
     saveBtn.disabled = true;
     saveBtn.textContent = 'Actualizando...';
     
-    // NOTA: La lógica para SUBIR O BORRAR la imagen se añadiría aquí.
     // Lógica para subida/actualización de imagen
     const fileInput = document.getElementById('edit-maintenance-image');
     const file = fileInput.files[0];
@@ -833,7 +832,7 @@ async function handleUpdateMaintenance() {
     }
 }
 
-// CORREGIDO: showEditMaintenanceModal (Protegido contra TypeError)
+// CRÍTICO: Muestra la ventana superpuesta del modal de Mantenimiento
 function showEditMaintenanceModal(maintenanceId) {
   const maintenance = allData.find(d => d.id === maintenanceId);
   if (!maintenance) {
@@ -841,18 +840,16 @@ function showEditMaintenanceModal(maintenanceId) {
     return;
   }
 
-  // 1. Rellenar los campos del formulario (usando || '' para seguridad)
+  // 1. Rellenar los campos del formulario
   document.getElementById('edit-maintenance-id').value = maintenanceId;
   document.getElementById('edit-maintenance-bike').value = maintenance.bike_name || ''; 
 
-  // Asignamos valores solo si los elementos SELECT existen
   const typeSelect = document.getElementById('edit-maintenance-type');
   if (typeSelect) typeSelect.value = maintenance.maintenance_type || '';
 
   const componentSelect = document.getElementById('edit-maintenance-component');
   if (componentSelect) componentSelect.value = maintenance.component || '';
   
-  // Inputs de fecha y número
   document.getElementById('edit-maintenance-date').value = maintenance.date || '';
   document.getElementById('edit-maintenance-km').value = maintenance.km_at_maintenance || '';
   document.getElementById('edit-maintenance-cost').value = maintenance.cost || 0;
@@ -870,11 +867,11 @@ function showEditMaintenanceModal(maintenanceId) {
     document.getElementById('edit-maintenance-image').value = ''; // Limpiar el input file
   }
 
-  // 2. Mostrar el modal
+  // 2. Mostrar el modal (CRÍTICO: Esto lo hace flotante)
   document.getElementById('edit-maintenance-modal').style.display = 'flex';
 }
 
-// CORREGIDO: showEditBikeModal (Versión Final Protegida contra TypeError)
+// CRÍTICO: Muestra la ventana superpuesta del modal de Bicicleta
 function showEditBikeModal(bikeId) {
     const bike = allData.find(d => d.id === bikeId);
     if (!bike) return;
@@ -884,7 +881,6 @@ function showEditBikeModal(bikeId) {
     // 1. Rellenar campos principales (protegidos contra null con checks)
     document.getElementById('edit-bike-id').value = bikeId;
     
-    // Asignación con protección
     const nameInput = document.getElementById('edit-bike-name');
     if (nameInput) nameInput.value = bike.bike_name;
 
@@ -892,14 +888,14 @@ function showEditBikeModal(bikeId) {
     if (typeSelect) typeSelect.value = bike.bike_type;
 
     const colorInput = document.getElementById('edit-bike-color');
-    if (colorInput) colorInput.value = bike.bike_color || ''; // LÍNEA CRÍTICA PROTEGIDA
+    if (colorInput) colorInput.value = bike.bike_color || ''; 
 
     const kmInput = document.getElementById('edit-bike-km');
-    if (kmInput) kmInput.value = bike.total_km || ''; // LÍNEA CRÍTICA PROTEGIDA
+    if (kmInput) kmInput.value = bike.total_km || ''; 
     
-    // 2. Lógica para mostrar opción de eliminar la imagen existente (SOLUCIÓN AL ERROR DE LÍNEA 831)
+    // 2. Lógica para mostrar opción de eliminar la imagen existente
     const imageInfo = document.getElementById('edit-bike-image-info');
-    if (imageInfo) { // <--- PROTECCIÓN CRÍTICA AÑADIDA
+    if (imageInfo) { 
       if (bike.imageURL) {
         imageInfo.innerHTML = `<p style="margin-top: 10px;">✅ Imagen actual adjunta. <label><input type="checkbox" id="delete-current-bike-image"> Eliminar imagen actual</label></p>`;
       } else {
@@ -912,10 +908,11 @@ function showEditBikeModal(bikeId) {
     // 3. Rellenar y renderizar componentes
     renderComponentInputs(bike.components || DEFAULT_COMPONENTS);
 
-    // 4. Mostrar el modal
+    // 4. Mostrar el modal (CRÍTICO: Esto lo hace flotante)
     document.getElementById('edit-bike-modal').style.display = 'flex';
 }
 
+// CRÍTICO: Muestra la ventana superpuesta del modal de Stock
 function showEditStockModal(stockId) {
   const stock = allData.find(d => d.id === stockId);
   if (!stock) return;
@@ -942,7 +939,7 @@ function showEditStockModal(stockId) {
     document.getElementById('edit-stock-image').value = ''; // Limpiar el input file
   }
 
-  // 2. Mostrar el modal
+  // 2. Mostrar el modal (CRÍTICO: Esto lo hace flotante)
   document.getElementById('edit-stock-modal').style.display = 'flex';
 }
 
