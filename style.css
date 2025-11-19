@@ -1,149 +1,181 @@
-/* --- NUEVO DISEÑO DE INVENTARIO (LISTA HORIZONTAL) --- */
+/* ================================================================= */
+/* NUEVO DISEÑO DE INVENTARIO: LISTA HORIZONTAL (LIMPIO Y DEFINITIVO) */
+/* ================================================================= */
 
-/* Cambiamos la rejilla (grid) por una columna flexible */
+/* 1. Contenedor Principal: Lista vertical */
 .stock-grid {
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
   gap: 12px;
+  width: 100%;
 }
 
-/* La tarjeta ahora es un rectángulo horizontal */
+/* 2. Tarjeta de Material: Rectángulo horizontal */
 .stock-card {
-  display: flex;
-  flex-direction: row; /* Elementos uno al lado del otro */
-  align-items: center; /* Centrados verticalmente */
+  display: flex !important;
+  flex-direction: row !important; /* Elementos de izquierda a derecha */
+  align-items: center !important;
   background: white;
+  padding: 10px 15px;
   border-radius: 12px;
-  padding: 12px 15px;
   border: 1px solid #e2e8f0;
-  border-left: 5px solid #cbd5e0; /* Color por defecto */
+  border-left: 5px solid #cbd5e0; /* Color gris por defecto */
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transition: all 0.2s ease;
-  overflow: visible; /* Importante para que no recorte sombras */
+  position: relative;
+  overflow: visible; /* Para que se vean las sombras */
+  min-height: 80px;
 }
 
+/* Efecto Hover */
 .stock-card:hover {
-  transform: translateX(5px); /* Efecto mover a la derecha en vez de arriba */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateX(5px);
   border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Ajuste de la imagen: Pequeña y cuadrada */
+/* 3. Imagen: Pequeña y a la izquierda */
 .stock-card-img {
-  width: 60px;      /* Ancho fijo pequeño */
-  height: 60px;     /* Alto fijo pequeño */
-  min-width: 60px;  /* Evita que se aplaste */
+  width: 60px !important;
+  height: 60px !important;
+  min-width: 60px !important; /* Evita que se aplaste */
   object-fit: cover;
   border-radius: 8px;
-  margin: 0 15px 0 0; /* Margen solo a la derecha */
+  margin: 0 15px 0 0 !important; /* Margen a la derecha para separar del texto */
+  background-color: #f7fafc;
 }
 
-/* Contenedor de la información principal (Nombre, Marca) */
+/* 4. Información Central (Nombre y Marca) */
 .stock-info-main {
-  flex: 1; /* Ocupa el espacio sobrante */
+  flex: 1; /* Ocupa todo el espacio disponible en el centro */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-right: 15px;
+  overflow: hidden;
+  margin-right: 10px;
 }
 
 .stock-name {
   font-size: 16px;
   font-weight: 800;
   color: #2d3748;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+  white-space: nowrap;      /* No permitir salto de línea */
+  overflow: hidden;         /* Ocultar desbordamiento */
+  text-overflow: ellipsis;  /* Poner puntos suspensivos (...) */
 }
 
 .stock-meta-row {
   display: flex;
   align-items: center;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 8px;
 }
 
 .stock-category {
   font-size: 11px;
+  background: #edf2f7;
+  color: #4a5568;
   padding: 2px 8px;
   border-radius: 4px;
-  margin: 0; /* Quitar margen antiguo */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 !important; /* Resetear márgenes antiguos */
 }
 
 .stock-brand {
   font-size: 12px;
   color: #718096;
-  margin: 0;
+  margin: 0 !important;
 }
 
-/* Contenedor de cantidad y controles */
+/* 5. Área de Cantidad y Botones */
 .stock-qty-area {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
   background: #f7fafc;
-  padding: 5px 15px;
+  padding: 5px 10px;
   border-radius: 8px;
   margin-right: 15px;
 }
 
 .stock-qty-val {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
   color: #2d3748;
-  min-width: 40px;
+  min-width: 25px;
   text-align: center;
 }
 
 .quantity-btn {
   width: 28px;
   height: 28px;
-  font-size: 14px;
-  background: white;
+  font-size: 16px;
+  border-radius: 50%;
   border: 1px solid #cbd5e0;
+  background: white;
   color: #4a5568;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* Resetear padding */
+  margin: 0;
 }
+
 .quantity-btn:hover {
   background: #edf2f7;
   border-color: #a0aec0;
-  transform: none;
+  transform: scale(1.05);
 }
 
-/* Acciones (Editar/Borrar) */
+/* 6. Botones de Acción (Editar / Borrar) */
 .stock-actions {
   display: flex;
   gap: 8px;
 }
 
-/* Colores de estado para el borde izquierdo */
+/* ESTADOS (Colores del borde izquierdo) */
 .stock-card.low-stock {
-  border-left-color: #dd6b20; /* Naranja */
-  background: #fff; /* Mantenemos fondo blanco para limpieza */
+  border-left-color: #dd6b20;
+  background: #fffaf0;
 }
 
 .stock-card.out-of-stock {
-  border-left-color: #e53e3e; /* Rojo */
-  background: #fff5f5; /* Fondo ligeramente rojo */
+  border-left-color: #e53e3e;
+  background: #fff5f5;
 }
 
-/* Ocultar detalles extra en esta vista compacta para no saturar */
-.stock-details, .stock-alert, .stock-notes-display {
-    display: none; 
+/* OCULTAR ELEMENTOS QUE SOBRAN EN LA VISTA COMPACTA */
+.stock-details, 
+.stock-alert, 
+.stock-notes-display, 
+.stock-header, 
+.stock-icon {
+    display: none !important; 
 }
 
-/* --- RESPONSIVE PARA MÓVIL (Mantener diseño usable) --- */
-@media (max-width: 768px) {
+/* AJUSTES PARA MÓVIL */
+@media (max-width: 600px) {
   .stock-card {
-    flex-wrap: wrap; /* Permite que bajen elementos si no caben */
+    flex-wrap: wrap; /* Permitir que los elementos bajen si no caben */
+    padding: 15px;
   }
+  
   .stock-info-main {
-    min-width: 150px;
+    min-width: 140px;
     margin-bottom: 10px;
   }
+  
+  /* En móvil, mover los controles de cantidad abajo a la derecha */
   .stock-qty-area {
-    margin-left: 75px; /* Alinear debajo del texto saltando la foto */
-    margin-right: auto;
-    margin-bottom: 10px;
+    margin-left: auto; 
+    margin-right: 10px;
+    margin-bottom: 0;
   }
+  
   .stock-actions {
-    margin-left: auto; /* Empujar a la derecha */
+    margin-left: 0;
   }
 }
