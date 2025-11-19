@@ -937,11 +937,11 @@ body {
     bottom: 0;
     background: rgba(0,0,0,0.7);
     display: flex;
-    align-items: center; /* CRÍTICO: Centra verticalmente */
+    align-items: flex-start; /* CRÍTICO: Alinea al inicio para que el scroll comience arriba */
     justify-content: center;
     z-index: 1000; /* CRÍTICO: Capa superior para superponer */
     animation: fadeIn 0.3s ease;
-    overflow-y: auto; 
+    overflow-y: auto; /* Permite el scroll dentro del modal si es más grande que la ventana */
     padding: 20px 0;
   }
   
@@ -957,7 +957,7 @@ body {
     max-width: 650px; 
     width: 90%;
     animation: scaleIn 0.3s ease;
-    margin: 20px auto; 
+    margin: 20px auto; /* Mantiene un margen superior e inferior */
   }
   
   @keyframes scaleIn {
