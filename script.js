@@ -1,12 +1,15 @@
 function renderStock() {
   const stockList = document.getElementById('stock-list');
+  
+  // 1. Filtrado de datos
   let stock = allData.filter(d => d.type === 'stock');
 
-  // --- FILTROS (Se mantienen igual) ---
+  // Filtro por Categoría
   if (currentStockCategoryFilter) {
     stock = stock.filter(s => s.stock_category === currentStockCategoryFilter);
   }
 
+  // Filtro por Estado
   if (currentStockStatusFilter) {
     stock = stock.filter(s => {
       if (currentStockStatusFilter === 'ok') return s.stock_quantity > s.stock_min_quantity;
@@ -16,6 +19,7 @@ function renderStock() {
     });
   }
 
+  // Filtro de Búsqueda
   if (currentStockSearch) {
     const searchLower = currentStockSearch.toLowerCase();
     stock = stock.filter(s => 
@@ -26,48 +30,51 @@ function renderStock() {
     );
   }
 
+  // 2. Estado Vacío
   if (stock.length === 0) {
     stockList.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">📦</div>
-        <h3>No hay materiales en el inventario</h3>
-        <p>Añade componentes y materiales para gestionar tu stock</p>
+        <h3>Inventario vacío</h3>
+        <p>No se encontraron materiales con los filtros actuales.</p>
       </div>
     `;
     return;
   }
 
-  const currencySymbol = defaultConfig.currency_symbol;
-
+  // 3. Generación del HTML
   stockList.innerHTML = stock.map(s => {
     const isLowStock = s.stock_quantity > 0 && s.stock_quantity <= s.stock_min_quantity;
     const isOutOfStock = s.stock_quantity === 0;
     
+    // Clases para el color de la tarjeta
     let cardClass = 'stock-card';
-    
-    if (isOutOfStock) {
-      cardClass += ' out-of-stock';
-    } else if (isLowStock) {
-      cardClass += ' low-stock';
+    if (isOutOfStock) cardClass += ' out-of-stock';
+    else if (isLowStock) cardClass += ' low-stock';
+
+    // Lógica de imagen: Si hay URL usa <img>, si no, un icono
+    let imageHTML = '';
+    if (s.imageURL) {
+        imageHTML = `<img src="${s.imageURL}" alt="${s.stock_name}" class="stock-card-img">`;
+    } else {
+        imageHTML = `
+            <div class="stock-card-img" style="display: flex; align-items: center; justify-content: center; font-size: 24px; color: #cbd5e0;">
+                📦
+            </div>`;
     }
 
-    // Icono por defecto si no hay imagen
-    const defaultIcon = '📦'; 
-    
+    // Renderizado de cada fila
     return `
       <div class="${cardClass}">
         
-        ${s.imageURL 
-          ? `<img src="${s.imageURL}" alt="${s.stock_name}" class="stock-card-img">`
-          : `<div class="stock-card-img" style="background:#edf2f7; display:flex; align-items:center; justify-content:center; font-size:24px;">${defaultIcon}</div>`
-        }
+        ${imageHTML}
 
         <div class="stock-info-main">
           <div class="stock-name">${s.stock_name}</div>
           <div class="stock-meta-row">
             <span class="stock-category">${s.stock_category}</span>
             ${s.stock_brand ? `<span class="stock-brand">• ${s.stock_brand}</span>` : ''}
-            ${s.stock_location ? `<span class="stock-brand" style="color:#a0aec0;">• 📍 ${s.stock_location}</span>` : ''}
+            ${s.stock_location ? `<span class="stock-brand" style="color: #a0aec0;">• 📍 ${s.stock_location}</span>` : ''}
           </div>
         </div>
 
@@ -78,8 +85,8 @@ function renderStock() {
         </div>
 
         <div class="stock-actions">
-          <button class="edit-bike-btn" style="margin:0; width:32px; height:32px;" onclick="showEditStockModal('${s.id}')" title="Editar material">✏️</button>
-          <button class="delete-stock" style="margin:0; width:32px; height:32px;" onclick="showDeleteStockConfirmation('${s.id}')" title="Eliminar material">×</button>
+          <button class="edit-bike-btn" style="margin:0; width:32px; height:32px;" onclick="showEditStockModal('${s.id}')" title="Editar">✏️</button>
+          <button class="delete-stock" style="margin:0; width:32px; height:32px;" onclick="showDeleteStockConfirmation('${s.id}')" title="Eliminar">×</button>
         </div>
 
       </div>
