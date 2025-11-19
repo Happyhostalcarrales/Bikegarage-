@@ -337,7 +337,7 @@ function showEditBikeModal(bikeId) {
     // 3. Rellenar y renderizar componentes
     renderComponentInputs(bike.components || DEFAULT_COMPONENTS);
 
-    // 4. Mostrar el modal (CRÍTICO: Esto hace que aparezca superpuesto)
+    // 4. Mostrar el modal (CRÍTICO: Esto lo hace flotante)
     document.getElementById('edit-bike-modal').style.display = 'flex';
 }
 
@@ -1427,7 +1427,7 @@ function renderStats() {
   
   const currencySymbol = defaultConfig.currency_symbol;
 
-  // CORREGIDO: Protección contra null en el elemento general-stats
+  // CRÍTICO: Protección contra null en el elemento general-stats
   const generalStats = document.getElementById('general-stats');
   if (generalStats) {
       generalStats.innerHTML = `
@@ -1473,7 +1473,7 @@ function renderStats() {
   renderBikeDetails(bikes, maintenance, currencySymbol);
 }
 
-// CORREGIDO: Protección contra null en renderTopComponents
+// CRÍTICO: Protección contra null en renderTopComponents
 function renderTopComponents(maintenance) {
     const topComponentsSection = document.getElementById('top-components-section');
     if (!topComponentsSection) {
